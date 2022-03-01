@@ -1,0 +1,342 @@
+---
+title: "Statistics Report"
+author: "Brad Blaser"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
+options(dplyr.summarise.inform = FALSE)
+source("R/dependencies.R")
+source("R/configs.R")
+```
+
+
+## Figure 1E
+
+```{r}
+prkc_transients_all %>%
+  mutate(label_new = recode(category, "mcs" = "control")) %>% 
+  group_by(gene, label_new) %>%
+  summarise(mean = mean(runx_fold_change), se = se(runx_fold_change)) %>%
+  pander(caption = "Descriptive Statistics")
+
+rstatix::t_test(prkc_transients_all %>% 
+                  mutate(label_new = recode(category, "mcs" = "control")) %>%
+                  group_by(gene), 
+                formula = runx_fold_change ~ label_new,
+                detailed = F, 
+                var.equal = F) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 1G
+
+```{r}
+stable_prkcda_runx_df %>%
+  mutate(label_new = recode(label, "-" = "-", "+" = "TG")) %>%
+  mutate(label_new = factor(label_new, levels = c("-", "TG"))) %>%
+  group_by(label_new) %>%
+  summarise(mean = mean(runx_fold_change), se = se(runx_fold_change)) %>%
+  pander(caption = "Descriptive Statistics")
+
+
+rstatix::wilcox_test(
+  stable_prkcda_runx_df %>%
+    mutate(label_new = recode(label, "-" = "-", "+" = "TG")) %>%
+    mutate(label_new = factor(label_new, levels = c("-", "TG"))),
+  formula = runx_fold_change ~ label_new
+) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 1H
+
+```{r}
+HA100_data %>%
+  group_by(labels) %>%
+  summarise(mean = mean(runx_fold_change), se = se(runx_fold_change)) %>%
+  pander(caption = "Descriptive Statistics")
+
+
+rstatix::wilcox_test(
+  HA100_data,
+  formula = runx_fold_change ~ labels
+) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 2B
+```{r}
+gestalt_20180900_named_1 %>% 
+  group_by(timepoint, class) %>% 
+  summarise(mean_clones = mean(value), se_clones = se(value)) %>%
+  pander(caption = "Descriptive Statistics")
+
+WRS2::bwtrim(value ~ timepoint*class, 
+             id = first_name, 
+             data = gestalt_20180900_named_1)
+
+gestalt_20180900_named_1 %>%
+  group_by(timepoint) %>%
+  t_test(value ~ class, 
+         p.adjust.method = "bonferroni",
+         detailed = F,
+         var.equal = F) %>%
+  pander(caption = "Welch's T Test")
+```
+
+
+## Figure 2D
+```{r}
+gestalt_cor_data %>%
+  filter(name == "baseline_cor") %>%
+  group_by(first_name) %>%
+  mutate(rn = row_number()) %>%
+  filter(rn != 1) %>%
+  select(-rn,-sum_cor,-mean_cor,-name) %>%
+  mutate(label_new = recode(class, "mcs" = "control")) %>%
+  group_by(label_new, timepoint) %>%
+  summarise(mean_cor = mean(value), se_cor = se(value)) %>%
+  pander(caption = "Descriptive Statistics")
+
+gestalt_cor_data %>%
+  filter(name == "baseline_cor") %>%
+  group_by(first_name) %>%
+  mutate(rn = row_number()) %>%
+  filter(rn != 1) %>%
+  select(-rn,-sum_cor,-mean_cor,-name) %>%
+  mutate(label_new = recode(class, "mcs" = "control")) %>%
+  group_by(timepoint) %>%
+  rstatix::t_test(formula = value ~ label_new, var.equal = F) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 3D
+
+```{r}
+cluster_proportions_pmm %>%
+  pander()
+```
+
+## Figure 5B
+
+```{r}
+km_txp_data %>% 
+  dplyr::filter(experiment == "130718") %>% 
+  mutate(term = "4 wpt") %>%
+  group_by(class) %>%
+  summarise(mean_gr_ratio = mean(gr_ratio), se_gr_ratio = se(gr_ratio)) %>%
+  pander(caption = "Descriptive Statistics")
+
+km_txp_data %>% 
+  dplyr::filter(experiment == "130718") %>% 
+  mutate(term = "4 wpt") %>%
+  mutate(log2gr = log2(gr_ratio)) %>%
+  rstatix::t_test(formula = log2gr ~ class) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 5C
+
+```{r}
+km_txp_data %>% 
+      dplyr::filter(experiment %in% c("141219_lt","141219_st")) %>% 
+      mutate(term = recode(experiment, "141219_st" = "4 wpt" , "141219_lt" = "12 wpt")) %>%
+      mutate(term = factor(term, levels = c("4 wpt", "12 wpt"))) %>%
+  group_by(term, class) %>%
+  summarise(mean_gr_ratio = mean(gr_ratio), se_gr_ratio = se(gr_ratio)) %>%
+  pander(caption = "Descriptive Statistics")
+
+km_txp_data %>% 
+      dplyr::filter(experiment %in% c("141219_lt","141219_st")) %>% 
+      mutate(term = recode(experiment, "141219_st" = "4 wpt" , "141219_lt" = "12 wpt")) %>%
+      mutate(term = factor(term, levels = c("4 wpt", "12 wpt"))) %>%
+      mutate(log2gr = log2(gr_ratio)) %>%
+  group_by(term) %>%
+  filter(is.finite(log2gr)) %>%
+  rstatix::wilcox_test(formula = log2gr ~ label) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5D
+
+```{r}
+km_txp_data %>% 
+  dplyr::filter(experiment %in% c("150220", "150227","150327","150430")) %>%
+  group_by(label) %>%
+  summarise(mean_gr_ratio = mean(gr_ratio), se_gr_ratio = se(gr_ratio)) %>%
+  pander(caption = "Descriptive Statistics")
+
+
+tpa <- km_txp_data %>% 
+  dplyr::filter(experiment %in% c("150220", "150227","150327","150430")) %>%
+  filter(label == "TPA") %>%
+  pull(gr_ratio) %>%
+  log2()
+
+tpa_meki <- km_txp_data %>% 
+  dplyr::filter(experiment %in% c("150220", "150227","150327","150430")) %>%
+  filter(label == "TPA+MEKi") %>%
+  pull(gr_ratio) %>%
+  log2()
+
+wilcox.test(x = tpa, y = tpa_meki) %>%
+  pander()
+```
+
+## Figure 5E
+
+```{r}
+runx_cxcl8_restime %>%
+  group_by(label) %>%
+  summarise(med_res_time = median(time)) %>%
+  pander(caption = "Descriptive Statistics")
+
+runx_cxcl8_restime %>%
+  rstatix::wilcox_test(formula = time ~ label) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5F
+
+```{r}
+runx_cxcl8_prkcda_mut %>%
+  group_by(label) %>%
+  summarise(med_res_time = median(time_h)) %>%
+  pander(caption = "Descriptive Statistics")
+
+runx_cxcl8_prkcda_mut %>%
+  rstatix::wilcox_test(formula = time_h ~ label) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5G
+
+```{r}
+elrcxc %>%
+  group_by(label) %>%
+  summarise(med_res_time = median(time_h)) %>%
+  pander(caption = "Descriptive Statistics")
+
+elrcxc %>%
+  rstatix::wilcox_test(formula = time_h ~ label) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5H
+
+```{r}
+runx_cxcl8_competition %>%
+  group_by(class) %>%
+  summarise(med_res_time = median(time_h)) %>%
+  pander(caption = "Descriptive Statistics")
+
+runx_cxcl8_competition %>%
+  rstatix::wilcox_test(formula = time_h ~ class) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5I
+
+```{r}
+runx_cxcl8_cuddletime %>%
+  group_by(label) %>%
+  summarise(med_cuddletime = median(percent_cuddling_time)) %>%
+  pander(caption = "Descriptive Statistics")
+
+runx_cxcl8_cuddletime %>%
+  rstatix::wilcox_test(formula = percent_cuddling_time ~ label) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5J
+
+```{r}
+runx_cxcl8_stables %>%
+  mutate(label_new = recode(label, "+" = "TG")) %>%
+  mutate(label_new = factor(label_new, levels = c("-", "TG"))) %>%
+  group_by(label_new) %>%
+  summarise(mean_runx = mean(runx_count), se_runx = se(runx_count)) %>%
+  pander(caption = "Descriptive Statistics")
+
+runx_cxcl8_stables %>%
+  mutate(label_new = recode(label, "+" = "TG")) %>%
+  mutate(label_new = factor(label_new, levels = c("-", "TG"))) %>%
+  rstatix::t_test(formula = runx_count ~ label_new) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 5K
+
+```{r}
+drug_data %>%
+  mutate(label_new = recode(runx_cxcl8, "+" = "TG")) %>%
+  mutate(label_new = factor(label_new, levels = c("-", "TG"))) %>%
+  group_by(drug_name, label_new, treated) %>%
+  summarise(mean_fold_change = mean(fold_change_cell_count), se_fold_change = se(fold_change_cell_count)) %>%
+  pander(caption = "Descriptive Statistics")
+
+drug_data %>%
+  mutate(label_new = recode(runx_cxcl8, "+" = "TG")) %>%
+  mutate(label_new = factor(label_new, levels = c("-", "TG"))) %>%
+  group_by(drug_name, label_new) %>%
+  rstatix::t_test(formula = fold_change_cell_count ~ treated) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 5L
+
+```{r}
+qpcr_res_final %>%
+  group_by(label) %>%
+  summarise(mean_fc = mean(fold_change_18s), se_fc = se(fold_change_18s)) %>%
+  pander(caption = "Descriptive Statistics")
+
+qpcr_res_final %>%
+  rstatix::t_test(fold_change_18s ~ label) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 6D
+
+```{r}
+cluster_proportions_emb %>%
+  pander()
+```
+
+
+## Figure 6G
+
+```{r}
+km_facs_3mpf %>%
+  filter(name == "logpml") %>%
+  group_by(class) %>%
+  summarise(mean_pml = mean(2^value), se_pml = se(2^value)) %>%
+  pander(caption = "Descriptive Statistics")
+
+km_facs_3mpf %>%
+  filter(name == "logpml") %>%
+  rstatix::t_test(formula = value ~ class) %>%
+  pander(caption = "Welch's T Test")
+```
+
+## Figure 6J
+
+```{r}
+control_pseudotime <- bb_cellmeta(cds_cxcl8_marrow_heme) %>%
+  filter(label == "control") %>%
+  pull(pseudotime)
+cxcl8_pseudotime <- bb_cellmeta(cds_cxcl8_marrow_heme) %>%
+  filter(label == "cxcl8") %>%
+  pull(pseudotime)
+
+ks.test(control_pseudotime, cxcl8_pseudotime) %>% pander()
+```
+
+## Figure 6K
+
+```{r}
+cluster_proportions_cxcl8_marrow %>% pander()
+```
