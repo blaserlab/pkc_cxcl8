@@ -1,11 +1,6 @@
-# uncomment and run to restore package library from lock file
-# renv::restore()
+# blaseRtemplates::easy_install("blaserlab/blaseRtools")
 
-# uncomment and run to rebuild the lock file
-# renv::init()
-
-# renv::install("blaserlab/blaseRtools")
-
+suppressPackageStartupMessages(library("conflicted"))
 suppressPackageStartupMessages(library("blaseRtools"))
 suppressPackageStartupMessages(library("blaseRdata"))
 suppressPackageStartupMessages(library("tidyverse"))
@@ -30,7 +25,6 @@ suppressPackageStartupMessages(library("GenomicFeatures"))
 suppressPackageStartupMessages(library("AnnotationDbi"))
 suppressPackageStartupMessages(library("eulerr"))
 suppressPackageStartupMessages(library("pander"))
-suppressPackageStartupMessages(library("conflicted"))
 
 
 bb_renv_datapkg("/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/projects/pkc_cxcl8_data/datapkg")

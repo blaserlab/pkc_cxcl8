@@ -1,52 +1,31 @@
-# related to figure 4
+# related to figure 3
 if (stage_with_compose) {
-  source("R/figs/staging/prkcda_expression.R")
+  source("R/figs/staging/sele_prkcda_marrow_scrnaseq.R")
 }
 
 
-fig_S1_top <- 
-  plot_grid(
-    tss_plot,
-    nrow = 1,
-    labels = "A"
-  )
 
-fig_S1_mid <- 
-  plot_grid(
-  ga_heatmap,
-  labels = "B"
-  )
+
+fig_S1_top <- plot_grid(
+  prkcda_scrnaseq_umap_cluster,
+  muench_heatmap,
+  ncol = 2,
+  rel_widths = c(1,1),
+  labels = c("A", "B")
+  
+)
 
 fig_S1_bottom <- 
-  plot_grid(
-  tf_feature_plots$CEBPD + theme(legend.position = "bottom", legend.justification = "center"),
-  tf_feature_plots$SPIB + theme(legend.position = "bottom", legend.justification = "center"),
-  tf_feature_plots$`GATA1::TAL1` + theme(legend.position = "bottom", legend.justification = "center"),
-  tf_feature_plots$ZNF148 + theme(legend.position = "bottom", legend.justification = "center"),
-  ncol = 4,
-  labels = c("C", "D", "E", "F"),
-  align = "h", 
-  axis = "b"
-    )
+  plot_grid(agg_score_heatmap, 
+            labels = "C")
 
-fig_S1_subsubbottom <- 
-  plot_grid(
-    e4_atac_tss_enrichment_plot,
-    tfbs_consensus_plot,
-    ncol = 2,
-    rel_widths = c(1,1), 
-    labels = c("G","H")
-  )
-
-fig_S1 <- 
-  plot_grid(
-    fig_S1_top,
-    fig_S1_mid,
-    fig_S1_bottom,
-    fig_S1_subsubbottom,
-    nrow = 4,
-    rel_heights = c(0.7,0.7,0.7, 1)
-  )
+fig_S1 <- plot_grid(
+  fig_S1_top,
+  fig_S1_bottom,
+  NULL,
+  nrow = 3,
+  rel_heights = c(1,1,1)
+)
 
 save_plot(
   fig_S1,

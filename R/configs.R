@@ -106,7 +106,7 @@ conflict_prefer("get_legend", "cowplot")
 
 # output
 # output directories
-figs_out <- "~/network/P/blaser_lab_p/writing/cxcl8_pkc_manuscript_2020/figures/final_r_pdfs"
+figs_out <- "~/network/P/blaser_lab_p/writing/cxcl8_pkc_manuscript_2020/figures/r_pdfs"
 tables_out <- "~/network/P/blaser_lab_P/writing/cxcl8_pkc_manuscript_2020/tables"
 
 # set the figure device
