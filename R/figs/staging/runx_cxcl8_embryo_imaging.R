@@ -180,8 +180,8 @@ elrcxc_plot <-
   geom_vline(
     data = as.data.frame(elrcxc %>%
                            group_by(label) %>%
-                           summarise(mean = mean(time_h))),
-    aes(xintercept = mean, color = label),
+                           summarise(median = median(time_h))),
+    aes(xintercept = median, color = label),
     show.legend = F
   ) +
   xlim(0, max(elrcxc$time_h) * 1.2) +
