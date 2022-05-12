@@ -42,6 +42,7 @@ fig_1 <- plot_grid(
 ) 
 
 save_plot(fig_1, 
-          filename = str_glue("{figs_out}/figure1.{device}"),
+          filename = "test.png",
+          # filename = str_glue("{figs_out}/figure1.{device}"),
           base_width = 7.5, 
           base_height = 9.75)

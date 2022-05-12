@@ -69,10 +69,12 @@ scatac_plotlist <- pmap(
 ) %>%
   set_names(scatac_plot_config$gene)
 
-scatac_features <- makeGRangesFromDataFrame(scatac_plotlist$prkcda[[3]][["data"]]) %>% plyranges::mutate(type = "Peaks")
+scatac_features <- Signac::granges(zf)
+GenomicRanges::mcols(scatac_features)$width <- width(scatac_features)
+GenomicRanges::mcols(scatac_features)$type <- "Peaks"
 
 scatac_trace <- bb_makeTrace(
-  trace_data = scatac_plotlist$prkcda[[1]][["data"]],
+  trace_data = scatac_plotlist$prkcda[[1]][[1]][["data"]],
   features = scatac_features,
   links = Links(zf),
   startcol = "position",
@@ -81,6 +83,7 @@ scatac_trace <- bb_makeTrace(
   seqname = "chr6",
   plot_range = "trace"
 )
+
 
 theme_shrinky <- function(size) {
   theme(axis.title.y = element_text(size = size)) +
@@ -380,22 +383,32 @@ tfbs_consensus_plot <-
 tfbs_consensus_plot  
 
 
-tfbs_venndata <- ggvenn::list_to_data_frame(list(dr11_tfbs = mcols(dr11_prkcda_intron_enhancer_fimo) %>% 
-       as_tibble() %>%
-       filter(q.value < 0.05) %>%
-       mutate(tfbs = str_replace(locus_tag, "_[:graph:]*", "")) %>% 
-       pull(tfbs) %>%
-       unique(),
-     hg38_tfbs = mcols(hg38_prkcd_24105_fimo) %>% 
-       as_tibble() %>% 
-       filter(q.value < 0.05) %>%
-       mutate(tfbs = str_replace(locus_tag, "_[:graph:]*", "")) %>% 
-       pull(tfbs) %>%
-       unique()))
+dr11_tfbs <- mcols(dr11_prkcda_intron_enhancer_fimo) %>% 
+         as_tibble() %>%
+         filter(q.value < 0.05) %>%
+         mutate(tfbs = str_replace(locus_tag, "_[:graph:]*", "")) %>% 
+         pull(tfbs) %>%
+         unique()
 
-tfbs_venn <- ggplot(tfbs_venndata, aes(A = dr11_tfbs, B =  hg38_tfbs)) +
-  ggvenn::geom_venn(set_names = c("D. rerio", "H. Sapiens"), stroke_size = 0.5, set_name_size = 3, text_size = 3, auto_scale = T) + theme_void() + coord_fixed(xlim = c(-2, 2), ylim = c(-1.5, 1.5))
-tfbs_venn
+hg38_tfbs <- mcols(hg38_prkcd_24105_fimo) %>% 
+         as_tibble() %>% 
+         filter(q.value < 0.05) %>%
+         mutate(tfbs = str_replace(locus_tag, "_[:graph:]*", "")) %>% 
+         pull(tfbs) %>%
+         unique()
+
+tfbs_venndata <- tibble(value = union(dr11_tfbs, hg38_tfbs)) |>
+  mutate(dr11 = ifelse(value %in% dr11_tfbs, TRUE, FALSE)) |> 
+  mutate(hg38 = ifelse(value %in% hg38_tfbs, TRUE, FALSE))
+
+
+tfbs_venn <- ggplot(tfbs_venndata, aes(A = dr11, B =  hg38)) +
+  ggvenn::geom_venn(set_names = c("D. rerio", "H. Sapiens"), 
+                    stroke_size = 0.5, 
+                    set_name_size = 3, 
+                    text_size = 3) + 
+  theme_void() + 
+  coord_fixed(xlim = c(-2, 2), ylim = c(-1.5, 1.5))
 
 # e4 atac tss enrichment------------------------------------
   

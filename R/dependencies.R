@@ -1,4 +1,11 @@
-# blaseRtemplates::easy_install("blaserlab/blaseRtools")
+# blaseRtemplates::easy_install("blaserlab/blaseRtools", "new_or_update")
+# blaseRtemplates::easy_install("sqjin/CellChat", "link_from_cache")
+# blaseRtemplates::easy_install("CytoExploreR", "link_from_cache")
+# blaseRtemplates::easy_install("flowWorkspace", "link_from_cache")
+# blaseRtemplates::easy_install("SeuratWrappers", "link_from_cache")
+# blaseRtemplates::easy_install("Biostrings", "link_from_cache")
+# blaseRtemplates::easy_install("ggvenn", "new_or_update")
+
 
 suppressPackageStartupMessages(library("conflicted"))
 suppressPackageStartupMessages(library("blaseRtools"))
@@ -27,6 +34,6 @@ suppressPackageStartupMessages(library("eulerr"))
 suppressPackageStartupMessages(library("pander"))
 
 
-bb_renv_datapkg("/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/projects/pkc_cxcl8_data/datapkg")
+blaseRtemplates::bb_renv_datapkg("/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/projects/pkc_cxcl8_data/datapkg")
 
 lazyData::requireData("pkc.cxcl8.datapkg")
