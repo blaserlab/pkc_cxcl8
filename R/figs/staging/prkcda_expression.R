@@ -423,3 +423,17 @@ e4_atac_tss_enrichment_plot <- ggplot(e4_atac_tss_metafeature_data %>%
   geom_vline(xintercept = 0,color = "grey80", linetype = "dashed") +
   theme(legend.position = c(0.75, 0.75))
 e4_atac_tss_enrichment_plot
+
+# revision:  table of cell assignments--------------------------------------
+scatac_cluster_assignment_barplot <- bb_cellmeta(zf_cds) |> 
+  select(leiden_assignment, seurat_predicted_id) |> 
+  group_by(leiden_assignment, seurat_predicted_id) |> 
+  summarise(n = n()) |> 
+  filter(n>10) |> 
+  mutate(leiden_assignment = factor(leiden_assignment, levels = c("Progenitor 1", "Progenitor 2", "Neutrophil", "Erythroid", "Renal"))) |>
+  mutate(seurat_predicted_id = factor(seurat_predicted_id)) |> 
+  ggplot(mapping = aes(x = leiden_assignment, y = n, fill = fct_reorder(seurat_predicted_id, n))) +
+  geom_col(position = "fill", color = "black") +
+  scale_fill_manual(values = revision_palette_1) +
+  labs(x = "Cluster Assignment", y = "Proportion of Cluster", fill = "Predicted Label")
+scatac_cluster_assignment_barplot

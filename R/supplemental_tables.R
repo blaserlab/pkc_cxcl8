@@ -113,7 +113,6 @@ supplemental_table_4 <- bind_rows(
   write_csv(str_glue("{tables_out}/supplemental_table_4.csv"))
 
 
-
 # e4 deg-------------------------------------------------------------
 supplemental_table_5 <- e4_res_table %>%
   select(-version) %>%

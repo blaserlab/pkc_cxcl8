@@ -78,6 +78,11 @@ experimental_group_palette_2 <- c(
 
   )
 
+# for the scatac cell assignment bar chart
+revision_palette_1 <- c(
+ brewer.pal(n = 12, name = "Paired"),
+ "grey80"
+)
 
 
 jitter_alpha_fill <- 0.2
@@ -115,3 +120,5 @@ device <- "pdf"
 # set to true to re-source all panels before composing figures. Exception is facs plots and mutant typing plot which will not be restaged. 
 stage_with_compose <- TRUE
 # stage_with_compose <- FALSE
+
+

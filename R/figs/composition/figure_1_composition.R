@@ -25,16 +25,25 @@ fig_1_mid <- plot_grid(
 fig_1_bot <- plot_grid(
   NULL, 
   stable_prkcda_plot,
-  HA100_plot,
+  NULL,
   nrow = 1,
+  rel_widths = c(1, 0.9, 1.1),
   labels = c("F","G","H")
+)
+
+fig_1_subbot <- plot_grid(
+  HA100_plot,
+  NULL,
+  NULL,
+  nrow = 1,
+  labels = c("I", "", "")
 )
 
 fig_1 <- plot_grid(
  fig_1_top,
  fig_1_mid,
  fig_1_bot,
- NULL,
+ fig_1_subbot,
  align = "v",
  axis = "l",
  nrow = 4,
@@ -42,7 +51,7 @@ fig_1 <- plot_grid(
 ) 
 
 save_plot(fig_1, 
-          filename = "test.png",
-          # filename = str_glue("{figs_out}/figure1.{device}"),
+          # filename = "test.png",
+          filename = str_glue("{figs_out}/figure1.{device}"),
           base_width = 7.5, 
           base_height = 9.75)

@@ -19,6 +19,7 @@ fig_S1_bottom <-
   plot_grid(agg_score_heatmap, 
             labels = "C")
 
+
 fig_S1 <- plot_grid(
   fig_S1_top,
   fig_S1_bottom,
@@ -29,6 +30,7 @@ fig_S1 <- plot_grid(
 
 save_plot(
   fig_S1,
+  # filename = "test.png",
   filename = str_glue("{figs_out}/figureS1.{device}"),
   base_width = 7.5,
   base_height = 9.75

@@ -46,6 +46,7 @@ fig_3 <-
     fig_3_top,
     fig_3_row2,
     fig_3_bottom,
+    NULL,
     nrow = 4,
     # align = "v",
     # axis = "l",
@@ -54,6 +55,7 @@ fig_3 <-
 
 save_plot(
   fig_3,
+  # filename = "test.png",
   filename = str_glue("{figs_out}/figure3.{device}"),
   base_width = 7.5,
   base_height = 9.75

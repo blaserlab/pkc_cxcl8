@@ -17,7 +17,7 @@ runx_cxcl8_prkcda_mut_plot <-
        y = "Density",
        fill = NULL,
        subtitle = "*prkcda<sup>-/-</sup>*") +
-  bb_annotate_npc(label = "NS", x = 0.5, y = 0.9) +
+  bb_annotate_npc(label = "ns", x = 0.5, y = 0.9, gp = gpar(fontsize = 11)) +
   theme(legend.position = c(0.4, 0.6)) +
   theme(plot.subtitle = element_text(hjust = 0.5)) +
   theme(plot.subtitle = ggtext::element_markdown())
@@ -34,8 +34,10 @@ crispr_variants_plot <- plotVariants(crispr_set,
                                              target.loc = 12,
                                              guide.loc = IRanges::IRanges(7,29),
                                              min.count = 500,
-                                             tile.height = 0.55),
+                                             tile.height = 0.55,
+                                             top.n = 3),
                   plotFreqHeatmap.args = list(min.count = 500,
+                                              top.n = 3,
                                               plot.text.size = 3,
                                               x.size = 8, #group = rep(group_desig,length(bam_temp_files)),
                                               legend.text.size = 8,
@@ -44,8 +46,6 @@ crispr_variants_plot <- plotVariants(crispr_set,
                                               legend.key.height = grid::unit(0.5, "lines"),
                                               axis.text.x = element_text(hjust = 1)
                                               ))
-
-
 
 
 
@@ -75,23 +75,49 @@ runx_cxcl8_restime_plot <-
   theme(plot.subtitle = ggtext::element_markdown())
 
 # cuddling time in transients####----------------------------------------------------------
-runx_cxcl8_cuddletime_plot <-
-  ggplot(runx_cxcl8_cuddletime,
-         aes(x = label,
-             y = percent_cuddling_time,
-             fill = label,
-             color = label)) +
-  geom_violin(scale = "area") +
-  scale_color_manual(values = experimental_group_palette, guide = F) +
-  scale_fill_manual(values = alpha(experimental_group_palette, 0.4), guide = F) +
-  scale_linetype_manual(values = c("solid", "solid"), guide = F) +
-  stat_compare_means(
-    method = "wilcox",
-    label = "p.signif",
-    label.x.npc = "center"
-  ) +
-  labs(y = "% Cuddling Time", x = NULL, title = NULL) +
-  scale_y_continuous(expand = expansion(mult = c(0.1))) 
+# runx_cxcl8_cuddletime_plot <-
+#   ggplot(runx_cxcl8_cuddletime,
+#          aes(x = label,
+#              y = percent_cuddling_time,
+#              fill = label,
+#              color = label)) +
+#   geom_violin(scale = "area") +
+#   scale_color_manual(values = experimental_group_palette, guide = F) +
+#   scale_fill_manual(values = alpha(experimental_group_palette, 0.4), guide = F) +
+#   scale_linetype_manual(values = c("solid", "solid"), guide = F) +
+#   stat_compare_means(
+#     method = "wilcox",
+#     label = "p.signif",
+#     label.x.npc = "center"
+#   ) +
+#   labs(y = "% Cuddling Time", x = NULL, title = NULL) +
+#   scale_y_continuous(expand = expansion(mult = c(0.1))) 
+
+runx_cxcl8_cuddletime_plot <- ggplot(
+  runx_cxcl8_cuddletime,
+  aes(
+    x = end_movie_status,
+    y = percent_cuddling_time,
+    fill = label,
+    color = label
+  )
+) +
+  geom_split_violin()+
+  scale_color_manual(name = NULL, values = experimental_group_palette[c("control", "cxcl8")], limits = c("cxcl8", "control")) +
+  scale_fill_manual(name = NULL, values = alpha(experimental_group_palette[c("control", "cxcl8")], 0.4), limits = c("cxcl8", "control")) +
+  labs(y = "% Cuddling Time", x = NULL, title = NULL, fill = NULL) +
+  theme(axis.ticks.x = element_blank()) +
+  theme(axis.text.x = element_blank()) +
+  theme(legend.position = c(0.75, 0.25)) +
+  bb_annotate_npc(label = "**", x = 0.5, y = 0.95) +
+  scale_y_continuous(expand = expansion(mult = c(0.05,0.1))) +
+  theme(legend.position = "top") +
+  theme(legend.justification = "center") +
+  theme(legend.direction = "vertical") +
+  theme(axis.line.x = element_blank())
+  
+
+
 
 # runx stables jitter plot ####-------------------------------------------------------------------------
 
