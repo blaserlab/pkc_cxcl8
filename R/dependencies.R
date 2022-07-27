@@ -1,4 +1,4 @@
-# blaseRtemplates::easy_install("blaseRtools", "link_from_cache")
+blaseRtemplates::easy_install("ggh4x", "new_or_update")
 
 
 suppressPackageStartupMessages(library("conflicted"))
