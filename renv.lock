@@ -416,8 +416,14 @@
     "DEoptimR": {
       "Package": "DEoptimR",
       "Version": "1.0-11",
-      "Source": "Repository",
+      "Source": "CRAN",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "DEoptimR",
+      "RemoteRef": "DEoptimR",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "1.0-11",
       "Hash": "b18b34cfbf932e17803c2e3e4b1a2d2a",
       "Requirements": []
     },
@@ -1933,7 +1939,7 @@
     },
     "blaseRtools": {
       "Package": "blaseRtools",
-      "Version": "0.0.0.9096",
+      "Version": "0.0.0.9097",
       "Source": "GitHub",
       "Remotes": "github::blaserlab/blaseRdata,\n        github::cole-trapnell-lab/monocle3,\n        github::mojaveazure/seurat-disk,\n        github::chris-mcginnis-ucsf/DoubletFinder,\n        github::blaserlab/blaseRtemplates, github::sqjin/CellChat,\n        github::satijalab/seurat-wrappers",
       "RemoteType": "github",
@@ -1942,8 +1948,8 @@
       "RemoteUsername": "blaserlab",
       "RemotePkgRef": "blaserlab/blaseRtools",
       "RemoteRef": "HEAD",
-      "RemoteSha": "c5ae19e34dce90c2088c47a42071012f46628947",
-      "Hash": "9d37519297f50b5f81f28deff15f22cd",
+      "RemoteSha": "587a600e6126f993f235d5e6485ffca05fd993a7",
+      "Hash": "48736e42a484dbd3c439d323ac53dd85",
       "Requirements": [
         "BiocGenerics",
         "BiocManager",
@@ -3422,6 +3428,26 @@
         "tidyselect",
         "tweenr",
         "withr"
+      ]
+    },
+    "ggh4x": {
+      "Package": "ggh4x",
+      "Version": "0.2.1",
+      "Source": "CRAN",
+      "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "ggh4x",
+      "RemoteRef": "ggh4x",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "0.2.1",
+      "Hash": "5e0b1591bf8489cfacdb5aecf1697626",
+      "Requirements": [
+        "ggplot2",
+        "gtable",
+        "rlang",
+        "scales",
+        "vctrs"
       ]
     },
     "ggplot2": {
@@ -5938,8 +5964,14 @@
     "robustbase": {
       "Package": "robustbase",
       "Version": "0.95-0",
-      "Source": "Repository",
+      "Source": "CRAN",
       "Repository": "CRAN",
+      "RemoteType": "standard",
+      "RemotePkgRef": "robustbase",
+      "RemoteRef": "robustbase",
+      "RemoteRepos": "https://cloud.r-project.org",
+      "RemotePkgPlatform": "source",
+      "RemoteSha": "0.95-0",
       "Hash": "c918476150dd483a23f1d1cab6d17e76",
       "Requirements": [
         "DEoptimR"

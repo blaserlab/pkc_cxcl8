@@ -1,17 +1,4 @@
 
-# #read in the quantification data
-# 
-# wb_quant <- read_csv("~/network/P/blaser_lab_p/writing/cxcl8_pkc_manuscript_2020/figures/photoshop/ps_exports/quant/wb_quant.csv", col_types = "cfcd")
-# 
-# #read in the image index
-# 
-# image_index <- read_csv("~/network/P/blaser_lab_p/writing/cxcl8_pkc_manuscript_2020/figures/image_index.csv")
-# 
-# wb_quant <- left_join(wb_quant, select(image_index, md5sum, description), by = "md5sum") |> 
-#   select(md5sum, lane, band, area, description)
-# 
-# dir.create("data")
-# save(wb_quant, file = "data/wb_quant.rda", compress = "bzip2")
 
 # Fig 7A:  p-prkcda high mw vs low mw
 prkcda_highlow_plot <- wb_quant |> 

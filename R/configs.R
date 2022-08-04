@@ -70,8 +70,8 @@ experimental_group_palette <- c(
 
 
 experimental_group_palette_2 <- c(
-  "Progenitor 1" = "#83a344",
-  "Progenitor 2" = "#9171c8",
+  "Myeloid" = "#83a344",
+  "Lymphoid" = "#9171c8",
   "Neutrophil" = "#c8723e",
   "Erythroid" = "#4cab98",
   "Renal" = "#ca547e"

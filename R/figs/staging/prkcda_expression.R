@@ -1,24 +1,55 @@
 # dotplot to show expression of pkc isoforms ------------------------------------------
-pmm_pkc_dotplot <- bb_gene_dotplot(
-  cds = cds_pmm_final[,colData(cds_pmm_final)$cluster_assignment %in% c("Progenitor 1", "Progenitor 2", "Erythroid", "Pro-neutrophil", "Neutrophil 1", "Neutrophil 2")],
-                group_cells_by = "cluster_assignment", 
-                markers = rowData(cds_pmm_final) %>% 
-                  as_tibble() %>% 
-                  filter(gene_short_name %in% c("prkcaa", "prkcba", "prkcbb", "prkcda", "prkcdb", "prkcea", "prkceb", "prkcg", "prkcha", "prkchb", "prkci", "prkcz")) %>% 
-                  arrange(gene_short_name) %>% 
-                  pull(gene_short_name),
-                max.size = 4,
-  colorscale_name = "Expression", sizescale_name = "Fraction\nExpressing") +
+pmm_pkc_dotplot <- bb_genebubbles(obj = filter_cds(cds_pmm_final, 
+                                cells = bb_cellmeta(cds_pmm_final) |> 
+                                  filter(revision_cluster_assignment %in% c("HSC/Thr", 
+                                                                            "Myeloid",
+                                                                            "Lymphoid",
+                                                                            "Erythroid",
+                                                                            "Pro-neutrophil", 
+                                                                            "Neutrophil 1",
+                                                                            "Neutrophil 2"))),
+               cell_grouping = "revision_cluster_assignment", 
+               genes = bb_rowmeta(cds_pmm_final) |> 
+                 filter(gene_short_name %in% c("prkcaa", 
+                                              "prkcba", 
+                                              "prkcbb", 
+                                              "prkcda", 
+                                              "prkcdb", 
+                                              "prkcea", 
+                                              "prkceb", 
+                                              "prkcg", 
+                                              "prkcha", 
+                                              "prkchb", 
+                                              "prkci", 
+                                              "prkcz")) |> 
+                 pull(gene_short_name),
+               scale_expr = FALSE, return_value = "data") |>
+  mutate(gene_short_name = as.character(gene_short_name)) |> 
+  mutate(gene_short_name = factor(gene_short_name)) |> 
+  mutate(gene_short_name = fct_rev(gene_short_name)) |> 
+  ggplot(mapping = aes(x = revision_cluster_assignment, y = gene_short_name, size = proportion, color = expression)) +
+  geom_point() +
+  scale_size_area(max_size = 4) +
+  scale_color_viridis_c() +
   guides(color = guide_colorbar(title.theme = element_text(size = 9)),
          size = guide_legend(title.theme = element_text(size = 9))) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))  +
   theme(legend.key.height = unit(3.5, "mm")) +
   labs(x = NULL, y = NULL) 
 
+
+
+
+
 # scatac umap ----------------------------------------------------------------
+colData(zf_cds)$cell_id <- NULL
+colData(zf_cds)$revision_leiden_assignment <- recode(colData(zf_cds)$leiden_assignment,
+                                                     "Progenitor 1" = "Myeloid",
+                                                     "Progenitor 2" = "Lymphoid")
+
 
 zf_scatac_umap <- bb_var_umap(zf_cds, 
-                              "leiden_assignment", 
+                              "revision_leiden_assignment", 
                               overwrite_labels = T, 
                               group_label_size = 3, 
                               cell_size = 1, 
@@ -39,6 +70,8 @@ Fragments(zf) <- new_frag
 DefaultAssay(zf) <- "peaks"
 # relevel leiden clusters
 zf@meta.data$leiden_assignment <- fct_relevel(zf@meta.data$leiden_assignment, c("Progenitor 1", "Progenitor 2", "Neutrophil", "Erythroid", "Renal"))
+zf@meta.data$leiden_assignment <- fct_recode(zf@meta.data$leiden_assignment, Myeloid = "Progenitor 1", Lymphoid = "Progenitor 2")
+
 Idents(zf) <- "leiden_assignment"
 
 scatac_plot_config <- tribble(
@@ -107,17 +140,15 @@ p2 <- bb_plot_trace_model(scatac_trace) +
 p3 <- bb_plot_trace_feature(scatac_trace, type_to_plot = "Peaks") +
   theme_shrinky(size = 8)
 
+
 p4 <-
-  bb_plot_trace_links(scatac_trace) + scale_color_viridis_c(
-    breaks = c(0.5, 0.6, 0.7),
-    option = "F",
-    direction = -1,
-    end = 0.8 ,
-    guide = guide_colorbar(title.position = "top", 
-                           barheight = 0.5, 
-                           title.theme = element_text(size = 8), 
-                           label.theme = element_text(size = 6))
-  ) +
+  bb_plot_trace_links(scatac_trace) + 
+  scale_color_gradient(low = "grey80", 
+                       high = "red3", breaks = c(0.5, 0.6, 0.7),
+                       guide = guide_colorbar(title.position = "top", 
+                                              barheight = 0.5, 
+                                              title.theme = element_text(size = 8), 
+                                              label.theme = element_text(size = 6))) +
   theme(legend.direction = "horizontal",
         legend.position = c(0.75, 0.5)) + 
   labs(color = "Link Score") +
@@ -156,20 +187,18 @@ tf_feature_plots <-
           
       }) %>% 
   set_names(tf_features_toplot)
-tf_feature_plots$CEBPD
-tf_feature_plots$`GATA1::TAL1`
-tf_feature_plots$SPIB
-tf_feature_plots$IKZF1
-tf_feature_plots$ZNF148
-tf_feature_plots$EGR1
-tf_feature_plots$KLF9
 
 # gene_activity heatmap------------------------------------------------------
 # aggregate top marker gene activity by leiden assignment
+colData(zf_cds_ga)$revision_leiden_assignment <- 
+  recode(colData(zf_cds_ga)$leiden_assignment, 
+         "Progenitor 1" = "Myeloid", 
+         "Progenitor 2" = "Lymphoid")
+
+
 ga_hm_mat <- scale(t(as.matrix(aggregate_gene_expression(cds = zf_cds_ga[rowData(zf_cds_ga)$gene_short_name %in% zf_cds_ga_tm$gene_id,], 
                           cell_group_df = data.frame(cell = rownames(colData(zf_cds_ga)), 
-                                                     cell_grouping = colData(zf_cds_ga)$leiden_assignment)))))
-
+                                                     cell_grouping = colData(zf_cds_ga)$revision_leiden_assignment)))))
 
 col_fun_ga_hm_mat <- 
   colorRamp2(breaks = c(min(ga_hm_mat), 0, max(ga_hm_mat)), colors = heatmap_3_colors)
@@ -230,20 +259,19 @@ ga_heatmap <- grid.grabExpr(draw(
     column_dend_gp = gpar(lwd = 0.5)
   )
 ), wrap = T)
-plot_grid(ga_heatmap)
 
 # Plot TSS enrichment---------------------------------------------------
 DefaultAssay(zf) <- 'peaks'
-Idents(zf) <- "leiden_assignment"
+Idents(zf) <- "revision_leiden_assignment"
 tss_plot <- TSSPlot(zf, group.by = "leiden_assignment") +
-  facet_wrap(~factor(group, levels = c("Progenitor 1", "Progenitor 2", "Neutrophil", "Erythroid", "Renal")), nrow = 1) +
+  facet_wrap(~factor(group, levels = c("Myeloid", "Lymphoid", "Neutrophil", "Erythroid", "Renal")), nrow = 1) +
   theme_cowplot(font_size = main_fontsize) +
   labs(title = NULL, y = "Mean TSS\nEnrichment Score") +
   theme(legend.position = "none") +
   theme(strip.background = element_blank()) +
-  scale_color_manual(values = experimental_group_palette_2[c("Progenitor 1", "Progenitor 2", "Neutrophil", "Erythroid", "Renal")]) +
+  scale_color_manual(values = experimental_group_palette_2[c("Myeloid", "Lymphoid", "Neutrophil", "Erythroid", "Renal")]) +
   scale_x_continuous(breaks = c(-800, -400, 0, 400, 800))
-tss_plot
+
 # fimo----------------------------------------------------------
 prkcda_peak1_fimo_plot <- 
   prkcda_peak1_fimo %>%
@@ -422,18 +450,26 @@ e4_atac_tss_enrichment_plot <- ggplot(e4_atac_tss_metafeature_data %>%
   labs(x = "Distance to TSS", y = "Mean Normalized Counts", color = "Biological\nReplicate") +
   geom_vline(xintercept = 0,color = "grey80", linetype = "dashed") +
   theme(legend.position = c(0.75, 0.75))
-e4_atac_tss_enrichment_plot
 
 # revision:  table of cell assignments--------------------------------------
-scatac_cluster_assignment_barplot <- bb_cellmeta(zf_cds) |> 
-  select(leiden_assignment, seurat_predicted_id) |> 
-  group_by(leiden_assignment, seurat_predicted_id) |> 
+scatac_cluster_assignment_barplot <- bb_cellmeta(zf_cds) |>
+  select(revision_leiden_assignment, seurat_predicted_id) |> 
+  group_by(revision_leiden_assignment, seurat_predicted_id) |> 
   summarise(n = n()) |> 
   filter(n>10) |> 
-  mutate(leiden_assignment = factor(leiden_assignment, levels = c("Progenitor 1", "Progenitor 2", "Neutrophil", "Erythroid", "Renal"))) |>
+  mutate(revision_leiden_assignment = factor(revision_leiden_assignment, 
+                                             levels = c("Myeloid", 
+                                                        "Lymphoid", 
+                                                        "Neutrophil", 
+                                                        "Erythroid", 
+                                                        "Renal"))) |>
   mutate(seurat_predicted_id = factor(seurat_predicted_id)) |> 
-  ggplot(mapping = aes(x = leiden_assignment, y = n, fill = fct_reorder(seurat_predicted_id, n))) +
+  ggplot(mapping = aes(x = revision_leiden_assignment, 
+                       y = n, 
+                       fill = fct_reorder(seurat_predicted_id, n))) +
   geom_col(position = "fill", color = "black") +
   scale_fill_manual(values = revision_palette_1) +
-  labs(x = "Cluster Assignment", y = "Proportion of Cluster", fill = "Predicted Label")
+  labs(x = "Cluster Assignment", 
+       y = "Proportion of Cluster", 
+       fill = "Predicted Label")
 scatac_cluster_assignment_barplot

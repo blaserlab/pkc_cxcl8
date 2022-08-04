@@ -68,6 +68,7 @@ fig_4 <-
 
 save_plot(
   fig_4,
+  # filename = "test.png",
   filename = str_glue("{figs_out}/figure4.{device}"),
   base_width = 7.5,
   base_height = 9.75
