@@ -4,21 +4,23 @@ cxcl8_heme_class_umap <-
   cds_cxcl8_marrow_heme,
   var = "label",
   cell_size = 2,
-  palette = experimental_group_palette, foreground_alpha = 0.6,shape = 16
+  palette = experimental_group_palette, 
+  foreground_alpha = 0.6,
+  shape = 16
 ) +
   facet_wrap(facets = vars(value)) +
   theme(strip.background = element_blank())+
   theme(legend.position = "none")
-cxcl8_heme_class_umap
 
 cxcl8_partition_umap <-
   bb_var_umap(
-    cds = cds_cxcl8_marrow_final,
+    obj = cds_cxcl8_marrow_final,
     var = "partition_assignment_1",
     overwrite_labels = T,
     foreground_alpha = 0.6,
     palette = experimental_group_palette,
-    group_label_size = 3
+    group_label_size = 3,
+    rasterize = TRUE
   )
 
 # cxcl12a umap--------------------------------------------------------------------------
@@ -33,7 +35,7 @@ cxcl8_marrow_niche_cxcl12a_umap + theme_cowplot()
 cxcl8_marrow_niche_overlay <-
   ggdraw(
     bb_var_umap(
-      cds = cds_cxcl8_marrow_niche,
+      obj = cds_cxcl8_marrow_niche,
       var = "recluster_louvain_assignment",
       overwrite_labels = T,
       cell_size = 2,
@@ -130,7 +132,7 @@ cxcl8_marrow_tal1_umap <-
 cxcl8_marrow_mpx_umap <-
   bb_gene_umap(cds_cxcl8_marrow_final, 
                  gene_or_genes = "mpx") +
-  scale_color_viridis_c(breaks = c(-0.5, 0.5, 1.5), end = 0.8)+
+  scale_color_viridis_c(end = 0.8, na.value = "grey80")+
   theme(strip.text = element_blank()) +
   labs(title = "mpx",color = NULL) + 
   theme(plot.title = element_text(face = "italic")) +
@@ -200,6 +202,7 @@ cxcl8_niche_aggscore_heatmap <-
     )
   ), wrap = TRUE)
 
+plot_grid(cxcl8_niche_aggscore_heatmap)
 # cluster representation barplot--------------------------------------------
 cxcl8_marrow_cluster_representation_barplot <- 
   ggplot(data = cluster_proportions_cxcl8_marrow, 

@@ -2,7 +2,7 @@
 
 cxcl8_emb_scrnaseq_umap_niche_or_not <- 
   bb_var_umap(
-  cds = cds_embryo_aligned,
+  obj = cds_embryo_aligned,
   var = "niche_or_not", 
   overwrite_labels = T,
   group_label_size = 3,
@@ -13,13 +13,17 @@ cxcl8_emb_scrnaseq_umap_niche_or_not <-
     ~text_x, ~text_y, ~label,
     -4,5,"other",
     6,-3,"niche"
-  )
+  ), 
+  rasterize = TRUE, 
+  raster_dpi = 300
   
 )
 
+
+
 cxcl8_emb_scrnaseq_umap_niche <-
   bb_var_umap(
-    cds = cds_embryo_aligned[,colData(cds_embryo_aligned)$niche_or_not == "niche"],
+    obj = cds_embryo_aligned[,colData(cds_embryo_aligned)$niche_or_not == "niche"],
     var = "louvain_assignment_1",
     overwrite_labels = T,
     legend_pos = "none",
@@ -35,7 +39,7 @@ gene_module_df_emb <- bb_rowmeta(cds_embryo_aligned) %>%
   select(gene = feature_id, gene_group = module)
 
 emb_module3_agg_expression <- t(
-  aggregate_gene_expression(cds = cds_embryo_aligned, 
+  aggregate_gene_expression(cds = cds_embryo_aligned[!is.na(rowData(cds_embryo_aligned)$module),], 
                             gene_group_df = gene_module_df_emb, 
                             max_agg_value = 5)
 ) %>% 
@@ -52,14 +56,14 @@ emb_module3_agg_expression <- t(
 emb_mod3_violin <-
   ggplot(data = emb_module3_agg_expression,
          mapping = aes(x = label, y = module_score)) +
-  geom_jitter(
+  ggrastr::rasterise(geom_jitter(
     shape = 21,
     fill = "transparent",
     color = "black",
     alpha = 0.1,
     size = 0.5,
     stroke = 0.25
-  ) +
+  ), dpi = 300) +
   geom_violin(aes(fill = label),
               scale = "area",
               color = "black",
@@ -117,15 +121,13 @@ emb_msc_aggscore_heatmap <- grid.grabExpr(draw(
 ),wrap = TRUE)
 
 
-
 # gene dotplot for niche populations------------------------------
 
 niche_pop_gene_dotplot <- 
-  bb_gene_dotplot(
-  cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"],
-  group_cells_by = "louvain_assignment_1",
-  max.size = 4,
-  markers = c(
+  bb_genebubbles(
+  obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"],
+  cell_grouping = "louvain_assignment_1",
+  genes = c(
     "lepr", #
     "col1a1a", #
     "flt4", #
@@ -144,17 +146,17 @@ niche_pop_gene_dotplot <-
     "myh11a", #
     "fn1a",
     "the end"
-  ), colorscale_name = "Expression", sizescale_name = "Fraction\nExpressing"
-) + 
+)) + 
+  scale_size_area(max_size = 4) +
+  labs(x = NULL, y = NULL, color = "Expression", size = "Fraction\nExpressing") + 
   guides(color = guide_colorbar(title.theme = element_text(size = 9)), 
          size = guide_legend(title.theme = element_text(size = 9))) +
-  labs(x = NULL, y = NULL) + 
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
 
 # MSC subclusters---------------------------------------------------------------
 emb_msc_sublcuster_umap <-
   bb_var_umap(
-    cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
+    obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
     var = "louvain_assignment_1",
     palette = experimental_group_palette,
     overwrite_labels = T,
@@ -298,11 +300,13 @@ ht_emb_modules <- grid.grabExpr(draw(
 # overview umap plot-------------------------------
 cxcl8_emb_scrnaseq_umap_all <- 
   bb_var_umap(
-    cds = cds_embryo_aligned, 
+    obj = cds_embryo_aligned, 
     var = "partition", 
     overwrite_labels = T,
     group_label_size = 3,
-    foreground_alpha = 0.6)
+    foreground_alpha = 0.6,
+    rasterize = TRUE,
+    raster_dpi = 300)
 
 # zoom in on cxcl12+ cluster and plot aggregate proliferative marker expression--------------------------------------------
 cxcl8_emb_prolif_markers <-
@@ -314,7 +318,7 @@ cxcl8_emb_prolif_markers <-
 
 cxcl8_emb_proliferative_umap <-
   bb_gene_umap(
-    cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
+    obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
     gene_or_genes = cxcl8_emb_prolif_markers
   ) +
   theme_cowplot(font_size = 8) + 
@@ -323,12 +327,11 @@ cxcl8_emb_proliferative_umap <-
   theme(plot.title = element_text(face = "plain", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
   theme(legend.direction = "horizontal") +
-  guides(color = guide_colorbar(barheight = 0.5)) +
-  scale_color_viridis_c(limits = c(-1, 1), breaks = c(-1.0, 0, 1.0), end = 0.8)
+  guides(color = guide_colorbar(barheight = 0.5))
 
 cxcl8_emb_cxcl12a_umap <-
   bb_gene_umap(
-    cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
+    obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
     gene_or_genes = "cxcl12a"
   ) + 
   theme_cowplot(font_size = 8) +
@@ -338,14 +341,14 @@ cxcl8_emb_cxcl12a_umap <-
   theme(legend.position = c(0.6, 0.1)) +
   theme(legend.direction = "horizontal") +
   guides(color = guide_colorbar(barheight = 0.5)) +
-  scale_color_viridis_c(breaks = c(0, 1.0, 2.0), end = 0.8)
+  scale_color_viridis_c(breaks = c(0, 1.0, 2.0), na.value = "grey80")
 
 emb_lepr_expression_umap <- 
-  bb_gene_umap(cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"], 
+  bb_gene_umap(obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"], 
                gene_or_genes = "lepr") +
   theme_cowplot(font_size = 8) + 
   theme(strip.text = element_blank()) + 
-  labs(title = "lepr", color = NULL) +
+  labs(title = "lepr", color = "Expression") +
   theme(strip.text = element_blank()) +
   theme(plot.title = element_text(face = "italic", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
@@ -370,24 +373,43 @@ emb_col1a1a_violin <-
   theme(legend.position = "none")
 
 emb_col1a1a_umap <- 
-  bb_gene_umap(cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"], 
+  bb_gene_umap(obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"], 
                gene_or_genes = "col1a1a") +
   theme_cowplot(font_size = 8) + 
   theme(strip.text = element_blank()) + 
-  labs(title = "col1a1a", color = NULL) +
+  labs(title = "col1a1a", color = "Expression") +
   theme(strip.text = element_blank()) +
   theme(plot.title = element_text(face = "italic", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
   theme(legend.direction = "horizontal") +
   guides(color = guide_colorbar(barheight = 0.5)) +
   scale_y_continuous(breaks = c(-6, -3, 0, 3))
-  
 
 emb_msc_raw_sublcuster_umap <-
   bb_var_umap(
-    cds = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
+    obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$partition_assignment == "MSC"],
     var = "louvain",
     overwrite_labels = T,
     foreground_alpha = 0.6,
     cell_size = 1
   )
+
+# revision:  prkcd gene signature gsea ------------------------------------
+
+zf_human_fc <- sinusoidal_pseudobulk_res$Result |>
+  select(`ZFIN Symbol` = gene_short_name, log2FoldChange) |> 
+  left_join(zf_human_orthos) |> 
+  select(`Gene ID`, log2FoldChange) |> 
+  distinct() |> 
+  filter(!is.na(`Gene ID`)) |>
+  group_by(`Gene ID`) |> 
+  mutate(n = n()) |> 
+  filter(n == 1) |> 
+  select(-n) |> 
+  deframe()
+
+
+prkcd_target_genes$prkcd_targets <- unique(prkcd_target_genes$prkcd_targets)
+
+fgsea::plotEnrichment(pathway = prkcd_target_genes$prkcd_targets, stats = zf_human_fc)
+fgsea::fgsea(pathways = prkcd_target_genes, stats = zf_human_fc)

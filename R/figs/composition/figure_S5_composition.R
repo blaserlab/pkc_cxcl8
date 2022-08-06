@@ -5,62 +5,83 @@ if (stage_with_compose) {
   source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
 }
 
-
 fig_S5_top <-
-  cowplot::plot_grid(
-    cxcl8_partition_umap,
-    NULL,
-    ncol = 2, 
-    rel_widths = c(1.4, 2),
-    labels = c("A", ""))
-
-fig_S5_mid <- 
-  cowplot::plot_grid(
-    cxcl8_marrow_tal1_umap, 
-    cxcl8_marrow_spi1b_umap,
-    cxcl8_marrow_mpx_umap,
-    align = "h", 
+  plot_grid(
+    cxcl8_emb_scrnaseq_umap_all,
+    cxcl8_emb_scrnaseq_umap_niche_or_not,
+    emb_mod3_violin,
+    align = "h",
     axis = "b",
+    labels = c("A", "B", "C"),
     ncol = 3,
-    rel_widths = c(1,1,1),
-    labels = c("B", "C", "D")
+    rel_widths = c(1.5,1.5,0.8)
   )
 
 
-fig_S5_bottom <-
-  cowplot::plot_grid(
-    cxcl8_heme_pseudotime_genes,
-    cxcl8_marrow_niche_overlay,
+fig_S5_bottom_left <-
+  plot_grid(
     NULL,
-    # align = "h",
-    # axis = "b",
-    ncol = 3,
-    rel_widths = c(1, 1.25, 0.5),
+    ht_emb_modules,
+    ncol = 2,
+    rel_widths = c(1,10),
+    labels = c("D", "")
+  )
+
+fig_S5_bottom_right_top <-
+  plot_grid(
+    emb_lepr_expression_umap,
+    emb_col1a1a_umap,
+    align = "h",
+    axis = "b",
+    ncol = 2, 
     labels = c("E", "F")
   )
 
-fig_S5_subbottom <- 
-  cowplot::plot_grid(
-    cxcl8_niche_aggscore_heatmap,
-    NULL,
+
+
+
+fig_S5_bottom_right_mid <-
+  plot_grid(
+    emb_msc_aggscore_heatmap,
+    labels = "G"
+  )
+
+
+fig_S5_bottom_right_bottom <- 
+  plot_grid(
+    cxcl8_emb_proliferative_umap,
+    cxcl8_emb_cxcl12a_umap,
+    align = "h",
+    axis = "b",
     ncol = 2,
-    rel_widths = c(2,1),
-    labels = c("G")
+    labels = c("H", "I")
   )
 
+fig_S5_bottom_right <-
+  plot_grid(
+    fig_S5_bottom_right_top,
+    fig_S5_bottom_right_mid,
+    fig_S5_bottom_right_bottom,
+    nrow = 3,
+    rel_heights = c(1, 1.6, 1)
+    
+  )
 
-fig_S5 <- 
-  cowplot::plot_grid(
-    fig_S5_top, 
-    fig_S5_mid, 
+fig_S5_bottom <-
+  plot_grid(
+    fig_S5_bottom_left,
+    fig_S5_bottom_right,
+    ncol = 2,
+    rel_widths = c(1, 1.1)
+  )
+
+fig_S5 <-
+  plot_grid(
+    fig_S5_top,
     fig_S5_bottom,
-    fig_S5_subbottom,
-    align = "v", 
-    axis = "l",
-    nrow = 4,
-    rel_heights = c(1,0.9,1,1)
+    nrow = 2,
+    rel_heights = c(1,3)
   )
-
 
 save_plot(
   fig_S5,
