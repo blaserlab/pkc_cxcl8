@@ -323,7 +323,7 @@ cxcl8_emb_proliferative_umap <-
   ) +
   theme_cowplot(font_size = 8) + 
   theme(strip.text = element_blank()) +
-  labs(title = "Proliferative Markers") +
+  labs(title = "Proliferative Markers", color = NULL) +
   theme(plot.title = element_text(face = "plain", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
   theme(legend.direction = "horizontal") +
@@ -336,19 +336,19 @@ cxcl8_emb_cxcl12a_umap <-
   ) + 
   theme_cowplot(font_size = 8) +
   theme(strip.text = element_blank()) +
-  labs(title = "cxcl12a") +
+  labs(title = "cxcl12a", color = NULL) +
   theme(plot.title = element_text(face = "italic", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
   theme(legend.direction = "horizontal") +
   guides(color = guide_colorbar(barheight = 0.5)) +
-  scale_color_viridis_c(breaks = c(0, 1.0, 2.0), na.value = "grey80")
+  scale_color_viridis_c(limits = c(0, 2.2), breaks = c(0, 1.0, 2.0), na.value = "grey80")
 
 emb_lepr_expression_umap <- 
   bb_gene_umap(obj = cds_embryo_aligned[, colData(cds_embryo_aligned)$niche_or_not == "niche"], 
-               gene_or_genes = "lepr") +
+               gene_or_genes = "lepr", max_expr_val = 0.65) +
   theme_cowplot(font_size = 8) + 
   theme(strip.text = element_blank()) + 
-  labs(title = "lepr", color = "Expression") +
+  labs(title = "lepr", color = NULL) +
   theme(strip.text = element_blank()) +
   theme(plot.title = element_text(face = "italic", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
@@ -377,7 +377,7 @@ emb_col1a1a_umap <-
                gene_or_genes = "col1a1a") +
   theme_cowplot(font_size = 8) + 
   theme(strip.text = element_blank()) + 
-  labs(title = "col1a1a", color = "Expression") +
+  labs(title = "col1a1a", color = NULL) +
   theme(strip.text = element_blank()) +
   theme(plot.title = element_text(face = "italic", hjust = 0.5)) +
   theme(legend.position = c(0.6, 0.1)) +
@@ -411,5 +411,11 @@ zf_human_fc <- sinusoidal_pseudobulk_res$Result |>
 
 prkcd_target_genes$prkcd_targets <- unique(prkcd_target_genes$prkcd_targets)
 
-fgsea::plotEnrichment(pathway = prkcd_target_genes$prkcd_targets, stats = zf_human_fc)
-fgsea::fgsea(pathways = prkcd_target_genes, stats = zf_human_fc)
+prkcd_enrichment_plot <- fgsea::plotEnrichment(pathway = prkcd_target_genes$prkcd_targets, 
+                      stats = zf_human_fc) + 
+  labs(title = "PKC-\u03B4 Transcriptional Targets", 
+       x = "Gene Rank\nLog<sub>2</sub>(cxcl8/control)") +
+  theme(axis.title.x = element_markdown()) +
+  theme(plot.title = element_text(hjust = 0.5, size = 8))
+  
+# fgsea::fgsea(pathways = prkcd_target_genes, stats = zf_human_fc)

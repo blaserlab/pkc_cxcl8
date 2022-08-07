@@ -55,26 +55,38 @@ cxcl8_marrow_niche_overlay <-
 cxcl8_marrow_niche_overlay
 
 # plot a pseudotime trajectory for the hematopoietic cells-----------------------------------
+# get the trajetory graph
+traj <- monocle3::plot_cells(
+  cds_cxcl8_marrow_heme,
+  color_cells_by = "pseudotime",
+  label_leaves = F,
+  cell_size = 1
+)
+
 cxcl8_heme_pseudotime_umap <-
-  monocle3::plot_cells(
-    cds_cxcl8_marrow_heme,
-    color_cells_by = "pseudotime",
-    label_leaves = F,
-    cell_size = 1
-  ) +
-  theme_cowplot(font_size = 10) +
-  scale_color_viridis_c(option = "plasma",
-                        begin = 0,
-                        end = 0.95) +
+  bb_var_umap(cds_cxcl8_marrow_heme,
+              "pseudotime", cell_size = 1) +
+  scale_color_viridis_c(option = "plasma", end = 0.95) +
+  scale_fill_viridis_c(option = "plasma",
+                       end = 0.95,
+                       guide = "none") +
+  traj[["layers"]][[3]] +
+  traj[["layers"]][[6]] +
+  traj[["layers"]][[7]] +
   labs(color = "pseudotime") +
   theme(legend.position = c(0.4, 0.8)) +
   theme(legend.direction = "horizontal") +
-  guides(color = guide_colorbar(title.position = "top", 
-                                barheight = 0.5, 
-                                title.hjust = 0.5, 
-                                title.theme = element_text(size = 9))) 
+  guides(
+    color = guide_colorbar(
+      title.position = "top",
+      barheight = 0.5,
+      title.hjust = 0.5,
+      title.theme = element_text(size = 9)
+    )
+  )
+
   
-  
+
 # plot gene expression in pseudotime---------------------------------------------------------
 cxcl8_heme_pseudotime_genes <-
   monocle3::plot_genes_in_pseudotime(
@@ -109,14 +121,16 @@ cxcl8_heme_pseudotime_split_violin <-
 # gex umaps--------------------------------------------------------
 cxcl8_marrow_spi1b_umap <-
   bb_gene_umap(cds_cxcl8_marrow_final, 
-                 gene_or_genes = "spi1b") +
+                 gene_or_genes = "spi1b" 
+               ) +
   theme(strip.text = element_blank()) +
   labs(title = "spi1b",color = NULL) + 
   theme(plot.title = element_text(face = "italic")) +
   theme(legend.position = c(0.35,0.2)) +
   theme(legend.direction = "horizontal") +
   guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
-  guides(color = guide_colorbar(barheight = 0.5)) 
+  guides(color = guide_colorbar(barheight = 0.5)) +
+  scale_color_viridis_c(breaks = c(0, 0.6, 1.2), na.value = "grey80")
 
 cxcl8_marrow_tal1_umap <-
   bb_gene_umap(cds_cxcl8_marrow_final, 
@@ -127,12 +141,12 @@ cxcl8_marrow_tal1_umap <-
   theme(legend.position = c(0.35,0.2)) +
   theme(legend.direction = "horizontal") +
   guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
-  guides(color = guide_colorbar(barheight = 0.5)) 
+  guides(color = guide_colorbar(barheight = 0.5)) + 
+  scale_color_viridis_c(breaks = c(0, 0.4, 0.8), na.value = "grey80")
 
 cxcl8_marrow_mpx_umap <-
   bb_gene_umap(cds_cxcl8_marrow_final, 
                  gene_or_genes = "mpx") +
-  scale_color_viridis_c(end = 0.8, na.value = "grey80")+
   theme(strip.text = element_blank()) +
   labs(title = "mpx",color = NULL) + 
   theme(plot.title = element_text(face = "italic")) +

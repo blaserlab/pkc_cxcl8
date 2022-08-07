@@ -8,11 +8,12 @@ if (stage_with_compose) {
 
 fig_S6_top <-
   cowplot::plot_grid(
-    cxcl8_partition_umap,
     NULL,
-    ncol = 2, 
-    rel_widths = c(1.4, 2),
-    labels = c("A", ""))
+    NULL,
+    cxcl8_partition_umap,
+    ncol = 3, 
+    rel_widths = c(1, 1, 1.4),
+    labels = c("A", "B", "C"))
 
 fig_S6_mid <- 
   cowplot::plot_grid(
@@ -23,7 +24,7 @@ fig_S6_mid <-
     axis = "b",
     ncol = 3,
     rel_widths = c(1,1,1),
-    labels = c("B", "C", "D")
+    labels = c("D", "E", "F")
   )
 
 
@@ -36,7 +37,7 @@ fig_S6_bottom <-
     # axis = "b",
     ncol = 3,
     rel_widths = c(1, 1.25, 0.5),
-    labels = c("E", "F")
+    labels = c("G", "H")
   )
 
 fig_S6_subbottom <- 
@@ -45,7 +46,7 @@ fig_S6_subbottom <-
     NULL,
     ncol = 2,
     rel_widths = c(2,1),
-    labels = c("G")
+    labels = c("I")
   )
 
 
@@ -64,7 +65,8 @@ fig_S6 <-
 
 save_plot(
   fig_S6,
-  filename = str_glue("{figs_out}/figureS6.{device}"),
+  filename = "s6_temp.png",
+  # filename = str_glue("{figs_out}/figureS6.{device}"),
   base_width = 7.5,
   base_height = 9.75
 )
