@@ -1,5 +1,5 @@
 if (stage_with_compose) {
-  source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
+  # source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
   # source("R/figs/staging/runx_cxcl8_km_facs.R")
   # source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
 }
@@ -47,18 +47,18 @@ fig_6_mid_bottom <-
     align = "h",
     axis = "b",
     ncol = 3,
-    rel_widths = c(1.25,1,1),
+    rel_widths = c(1.5,1,1),
     labels = c("E","F","G")
   )
 
 fig_6_bottom <-
   plot_grid(fig_6_left[[4]],
-            cxcl8_heme_pseudotime_split_violin,
+            cxcl8_heme_pseudotime_density,
             cxcl8_marrow_cluster_representation_barplot,
             align = "h",
             axis = "b",
             ncol = 3,
-            rel_widths = c(1.5,1,1),
+            rel_widths = c(1,1,1),
             labels = c("H","I", "J"))
 
 

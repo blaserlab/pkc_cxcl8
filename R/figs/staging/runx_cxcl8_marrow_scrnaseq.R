@@ -118,6 +118,28 @@ cxcl8_heme_pseudotime_split_violin <-
   bb_annotate_npc(label = "****", x = 0.5, y = 0.95) +
   scale_y_continuous(expand = expansion(mult = c(0.05,0.1)))
 
+# remake as a normal density plot
+
+cxcl8_heme_pseudotime_density <-
+  bb_cellmeta(cds_cxcl8_marrow_heme) |>
+  ggplot(mapping = aes(x = pseudotime, color = label, fill = label)) +
+  geom_density() +
+  scale_fill_manual(
+    values = alpha(experimental_group_palette, 0.4),
+    breaks = c("control", "cxcl8")
+  ) +
+  scale_color_manual(
+    values = alpha(experimental_group_palette, 1),
+    breaks = c("control", "cxcl8")
+  ) +
+  labs(fill = NULL, color = NULL, x = "Differentiation \u21D2") +
+  bb_annotate_npc(label = "****", x = 0.5, y = 0.95) +
+  theme(legend.position = "top")
+  
+
+
+
+
 # gex umaps--------------------------------------------------------
 cxcl8_marrow_spi1b_umap <-
   bb_gene_umap(cds_cxcl8_marrow_final, 
