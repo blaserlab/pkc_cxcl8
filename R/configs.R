@@ -58,13 +58,13 @@ experimental_group_palette <- c(
   "km fibroblast" = brewer.pal(n = 8, name = "Accent")[3],
   "angio-\nhematopoietic" = brewer.pal(n = 12, name = "Set3")[10],
   "angiohematopoietic" = brewer.pal(n = 12, name = "Set3")[10],
-  "tubule 1" = brewer.pal(n = 8, name = "Dark2")[1],
-  "tubule 2" = brewer.pal(n = 8, name = "Dark2")[2],
-  "neuronal" = brewer.pal(n = 8, name = "Dark2")[3],
-  "germ cell" = brewer.pal(n = 8, name = "Dark2")[4],
-  "niche" = brewer.pal(n = 8, name = "Dark2")[5],
-  "heme" = brewer.pal(n = 8, name = "Dark2")[6],
-  "hepatocyte" = brewer.pal(n = 8, name = "Dark2")[7]
+  "Tubule 1" = brewer.pal(n = 8, name = "Dark2")[1],
+  "Tubule 2" = brewer.pal(n = 8, name = "Dark2")[2],
+  "Doublet" = brewer.pal(n = 8, name = "Dark2")[3],
+  "Germ cell" = brewer.pal(n = 8, name = "Dark2")[4],
+  "Niche" = brewer.pal(n = 8, name = "Dark2")[5],
+  "Progenitor/Myeloid" = brewer.pal(n = 8, name = "Dark2")[6],
+  "Lymphoid" = brewer.pal(n = 8, name = "Dark2")[7]
   
 )
 

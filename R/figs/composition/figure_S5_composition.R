@@ -1,8 +1,8 @@
 # related to figure 6
 if (stage_with_compose) {
-  source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
-  source("R/figs/staging/runx_cxcl8_km_facs.R")
-  source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
+  # source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
+  # source("R/figs/staging/runx_cxcl8_km_facs.R")
+  # source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
 }
 
 fig_S5_top <-

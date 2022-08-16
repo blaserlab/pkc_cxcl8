@@ -414,8 +414,8 @@ prkcd_target_genes$prkcd_targets <- unique(prkcd_target_genes$prkcd_targets)
 prkcd_enrichment_plot <- fgsea::plotEnrichment(pathway = prkcd_target_genes$prkcd_targets, 
                       stats = zf_human_fc) + 
   labs(title = "PKC-\u03B4 Transcriptional Targets", 
-       x = "Gene Rank\nLog<sub>2</sub>(cxcl8/control)") +
-  theme(axis.title.x = element_markdown()) +
-  theme(plot.title = element_text(hjust = 0.5, size = 8))
+       x = "Genes ranked by<br />Log<sub>2</sub>(cxcl8/control)") +
+  theme(axis.title.x = element_markdown(size = 10)) +
+  theme(plot.title = element_text(hjust = 0.5, size = 10))
   
 # fgsea::fgsea(pathways = prkcd_target_genes, stats = zf_human_fc)

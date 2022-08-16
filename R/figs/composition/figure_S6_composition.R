@@ -1,8 +1,8 @@
 # related to figure 6
 if (stage_with_compose) {
-  source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
-  source("R/figs/staging/runx_cxcl8_km_facs.R")
-  source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
+  # source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
+  # source("R/figs/staging/runx_cxcl8_km_facs.R")
+  # source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
 }
 
 
@@ -17,14 +17,10 @@ fig_S6_top <-
 
 fig_S6_mid <- 
   cowplot::plot_grid(
-    cxcl8_marrow_tal1_umap, 
-    cxcl8_marrow_spi1b_umap,
-    cxcl8_marrow_mpx_umap,
-    align = "h", 
-    axis = "b",
-    ncol = 3,
-    rel_widths = c(1,1,1),
-    labels = c("D", "E", "F")
+    cxcl8_marrow_genebubbles,
+    ncol = 1,
+    rel_widths = c(1),
+    labels = c("D")
   )
 
 
@@ -37,7 +33,7 @@ fig_S6_bottom <-
     # axis = "b",
     ncol = 3,
     rel_widths = c(1, 1.25, 0.5),
-    labels = c("G", "H")
+    labels = c("E", "F")
   )
 
 fig_S6_subbottom <- 
@@ -46,7 +42,7 @@ fig_S6_subbottom <-
     NULL,
     ncol = 2,
     rel_widths = c(2,1),
-    labels = c("I")
+    labels = c("G")
   )
 
 

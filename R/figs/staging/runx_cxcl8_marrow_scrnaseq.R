@@ -23,13 +23,35 @@ cxcl8_partition_umap <-
     rasterize = TRUE
   )
 
+
+cxcl8_marrow_genebubbles <- bb_genebubbles(cds_cxcl8_marrow_final, 
+               cell_grouping = "partition_assignment_1", 
+               gene_ordering = "as_supplied",
+               genes = c("gata2b", "gata2a", "tal1", "spi1b", "mpx", "lyz", "ccr9a", "cd81a", "cxcl12a", "slc22a2", "slc12a3", "tekt2"), 
+               return_value = "data") |>  
+  ggplot(mapping = aes(x = gene_short_name, y = partition_assignment_1, size = proportion, color = expression)) +
+  geom_point() +
+  scale_size_area(max_size = 6) +
+  scale_color_viridis_c() +
+  labs(x = NULL, y = NULL, color = "Expression", size = "Fraction\nExpressing") + 
+  guides(color = guide_colorbar(title.theme = element_text(size = 9)), 
+         size = guide_legend(title.theme = element_text(size = 9))) +
+  theme(axis.text.x = element_text(face = "italic", angle = 30, hjust = 1))
+
+
+# 
+# bb_var_umap(cds_cxcl8_marrow_final, "louvain")  
+# bb_var_umap(cds_cxcl8_marrow_final, "leiden")  
+# bb_var_umap(cds_cxcl8_marrow_final, "partition")  
+# bb_var_umap(cds_cxcl8_marrow_final, "partition_assignment_1")  
+
+
 # cxcl12a umap--------------------------------------------------------------------------
 cxcl8_marrow_niche_cxcl12a_umap <-
   bb_gene_umap(cds_cxcl8_marrow_niche, gene_or_genes = "cxcl12a") +
-  bb_annotate_npc(label = "cxcl12a",x = 0.4, y = 0.2, gp = gpar(fontface = "italic")) +
+  bb_annotate_npc(label = "cxcl12a",x = 0.4, y = 0.2, gp = gpar(fontface = "italic", cex = 0.75)) +
   theme_nothing() +
   theme(plot.background = element_rect(color = "black",size = 1))
-cxcl8_marrow_niche_cxcl12a_umap + theme_cowplot()
 
 # overlay ----------------------------------------------------------------------
 cxcl8_marrow_niche_overlay <-
@@ -52,7 +74,6 @@ cxcl8_marrow_niche_overlay <-
     )
   ) +
   draw_plot(cxcl8_marrow_niche_cxcl12a_umap, .25, .2, .3, .27)
-cxcl8_marrow_niche_overlay
 
 # plot a pseudotime trajectory for the hematopoietic cells-----------------------------------
 # get the trajetory graph
@@ -100,26 +121,11 @@ cxcl8_heme_pseudotime_genes <-
   theme_cowplot(font_size = 10) + 
   theme(strip.background = element_blank()) + 
   scale_color_viridis_c(option = "plasma",begin = 0, end = 0.95) + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  theme(strip.text = element_text(face = "italic"))
 
 
 # class distribution over pseudotime-------------------------------------------
-cxcl8_heme_pseudotime_split_violin <- 
-  colData(cds_cxcl8_marrow_heme) %>%
-  as_tibble() %>%
-  ggplot(mapping = aes(x = partition_assignment_1, y = pseudotime, fill = label)) +
-  geom_split_violin() + 
-  scale_fill_manual(values = alpha(experimental_group_palette, 0.4), breaks = c("control", "cxcl8")) +
-  labs(fill = NULL, x = NULL, y = "Differentiation \u21D2") +
-  theme(legend.position = "top") +
-  theme(legend.justification = "center") +
-  theme(axis.ticks.x = element_blank()) +
-  theme(axis.text.x = element_blank()) +
-  bb_annotate_npc(label = "****", x = 0.5, y = 0.95) +
-  scale_y_continuous(expand = expansion(mult = c(0.05,0.1)))
-
-# remake as a normal density plot
-
 cxcl8_heme_pseudotime_density <-
   bb_cellmeta(cds_cxcl8_marrow_heme) |>
   ggplot(mapping = aes(x = pseudotime, color = label, fill = label)) +
@@ -132,50 +138,12 @@ cxcl8_heme_pseudotime_density <-
     values = alpha(experimental_group_palette, 1),
     breaks = c("control", "cxcl8")
   ) +
-  labs(fill = NULL, color = NULL, x = "Differentiation \u21D2") +
+  labs(fill = NULL, color = NULL, x = "Pseudotime") +
   bb_annotate_npc(label = "****", x = 0.5, y = 0.95) +
-  theme(legend.position = "top")
+  theme(legend.position = "top", legend.justification = "center")
   
 
 
-
-
-# gex umaps--------------------------------------------------------
-cxcl8_marrow_spi1b_umap <-
-  bb_gene_umap(cds_cxcl8_marrow_final, 
-                 gene_or_genes = "spi1b" 
-               ) +
-  theme(strip.text = element_blank()) +
-  labs(title = "spi1b",color = NULL) + 
-  theme(plot.title = element_text(face = "italic")) +
-  theme(legend.position = c(0.35,0.2)) +
-  theme(legend.direction = "horizontal") +
-  guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
-  guides(color = guide_colorbar(barheight = 0.5)) +
-  scale_color_viridis_c(breaks = c(0, 0.6, 1.2), na.value = "grey80")
-
-cxcl8_marrow_tal1_umap <-
-  bb_gene_umap(cds_cxcl8_marrow_final, 
-                 gene_or_genes = "tal1") +
-  theme(strip.text = element_blank()) +
-  labs(title = "tal1",color = NULL) + 
-  theme(plot.title = element_text(face = "italic")) +
-  theme(legend.position = c(0.35,0.2)) +
-  theme(legend.direction = "horizontal") +
-  guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
-  guides(color = guide_colorbar(barheight = 0.5)) + 
-  scale_color_viridis_c(breaks = c(0, 0.4, 0.8), na.value = "grey80")
-
-cxcl8_marrow_mpx_umap <-
-  bb_gene_umap(cds_cxcl8_marrow_final, 
-                 gene_or_genes = "mpx") +
-  theme(strip.text = element_blank()) +
-  labs(title = "mpx",color = NULL) + 
-  theme(plot.title = element_text(face = "italic")) +
-  theme(legend.position = c(0.35,0.2)) +
-  theme(legend.direction = "horizontal") +
-  guides(color = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
-  guides(color = guide_colorbar(barheight = 0.5)) 
 
 # niche gene heatmap--------------------------------------------------------------------
 emb_niche_genesets <- 
@@ -238,7 +206,6 @@ cxcl8_niche_aggscore_heatmap <-
     )
   ), wrap = TRUE)
 
-plot_grid(cxcl8_niche_aggscore_heatmap)
 # cluster representation barplot--------------------------------------------
 cxcl8_marrow_cluster_representation_barplot <- 
   ggplot(data = cluster_proportions_cxcl8_marrow, 
