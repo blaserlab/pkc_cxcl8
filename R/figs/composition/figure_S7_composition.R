@@ -1,5 +1,5 @@
 if (stage_with_compose) {
-  # source("R/figs/staging/e4_bulk_rnaseq.R")
+  source("R/figs/staging/e4_bulk_rnaseq.R")
   source("R/figs/staging/wb_quantification.R")
 }
 

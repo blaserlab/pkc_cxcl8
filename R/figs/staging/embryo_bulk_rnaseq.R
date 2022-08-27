@@ -25,6 +25,7 @@ volcanoplot <-
   geom_text_repel(
     data = label_df_left,
     size = 3,
+    fontface = "italic",
     segment.size = 0.25,
     segment.alpha = 0.5,
     min.segment.length = 0.1,
@@ -38,7 +39,8 @@ volcanoplot <-
   ) +
   geom_text_repel(
     data = label_df_right,
-    size = 3,
+    size = 3, 
+    fontface = "italic",
     segment.size = 0.25,
     segment.alpha = 0.5,
     aes(
@@ -58,7 +60,6 @@ volcanoplot <-
     segment.inflect = TRUE,
     min.segment.length = 0
   ) 
-
 # bar plot with pkc family####---------------------------------------------------------------
 pkc_family_plot <-
   ggplot(pkc_data_to_plot, aes(x = gene, y = value, fill = alt_name1)) +
@@ -80,10 +81,10 @@ pkc_family_plot <-
            y = 23.5,
            label = "***") +
   theme(legend.position = c(0.4, 0.8),legend.text = element_text(size = 8)) +
-  labs(y = "Expression",
+  labs(y = "FPKM",
        x = NULL,
        title = NULL,
        fill = NULL) +
   guides(fill = guide_legend(keywidth = 0.5, keyheight = 0.5)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, face = "italic"))
 

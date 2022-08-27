@@ -83,7 +83,7 @@ erk_knockdown_rd <-  wb_quant |>
 prkcda_knockdown_erk_plot <- erk_knockdown_rd |> 
   left_join(erk_knockdown_rd |> ungroup() |> filter(blot == "actin") |> select(lane, actin_rel_density = rel_density)) |> 
   mutate(adj_density = rel_density/actin_rel_density) |> 
-  mutate(condition = recode(lane, "1" = "PBS", "2" = "rhCXCL8", "3" = "PBS", "4" = "rhCXCL88")) |> 
+  mutate(condition = recode(lane, "1" = "PBS", "2" = "rhCXCL8", "3" = "PBS", "4" = "rhCXCL8")) |> 
   mutate(celltype = recode(lane, "1" = "scramble", "2" = "scramble", "3" = "shPRKCD", "4" = "shPRKCD")) |>
   filter(blot != "actin") |> 
   mutate(blot = factor(blot, levels = c("p-ERK", "ERK"))) |> 

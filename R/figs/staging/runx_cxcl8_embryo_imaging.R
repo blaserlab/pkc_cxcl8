@@ -20,7 +20,7 @@ runx_cxcl8_prkcda_mut_plot <-
   bb_annotate_npc(label = "ns", x = 0.5, y = 0.9, gp = gpar(fontsize = 11)) +
   theme(legend.position = c(0.4, 0.6)) +
   theme(plot.subtitle = element_text(hjust = 0.5)) +
-  theme(plot.subtitle = ggtext::element_markdown())
+  theme(plot.subtitle = ggtext::element_markdown(face = "italic"))
 
 # genotyping figure-------------------------------------------------------------------
 

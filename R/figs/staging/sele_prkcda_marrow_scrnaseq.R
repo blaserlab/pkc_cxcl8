@@ -149,7 +149,6 @@ pmm_dotplot_markers <- c(
   "pbx1b",
   "mpl",
   "itga2b",
-  "runx1",
   "csf1rb",
   "gata2a",
   "gata2b",
@@ -224,7 +223,7 @@ scgestalt_barcode_sharing_plot <- colData(cds_pmm_final) %>%
       "Proliferative"
     )
   ) |>
-  filter(fishname == "prkcda fish 8") %>% 
+  filter(fishname == "prkcda fish 8") %>%
   mutate(gestalt_mapping = fct_infreq(factor(gestalt_mapping), ordered = T)) %>%
   arrange(gestalt_mapping, revision_cluster_assignment) %>%
   mutate(barcode_sample = fct_rev(fct_inorder(factor(barcode_sample)))) %>%

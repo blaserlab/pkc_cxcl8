@@ -1,8 +1,8 @@
 # related to figure 6
 if (stage_with_compose) {
-  # source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
-  # source("R/figs/staging/runx_cxcl8_km_facs.R")
-  # source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
+  source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
+  source("R/figs/staging/runx_cxcl8_km_facs.R")
+  source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
 }
 
 fig_S5_top <-
@@ -85,8 +85,8 @@ fig_S5 <-
 
 save_plot(
   fig_S5,
-  filename = "s5_test.png",
-  # filename = str_glue("{figs_out}/figureS5.{device}"),
+  # filename = "s5_test.png",
+  filename = str_glue("{figs_out}/figureS5.{device}"),
   base_width = 7.5,
   base_height = 9.75
 )

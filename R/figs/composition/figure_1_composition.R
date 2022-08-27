@@ -24,19 +24,20 @@ fig_1_mid <- plot_grid(
 
 fig_1_bot <- plot_grid(
   NULL, 
-  stable_prkcda_plot,
+  NULL,
   NULL,
   nrow = 1,
   rel_widths = c(1, 0.9, 1.1),
-  labels = c("F","G","H")
+  labels = c("F","G","")
 )
 
 fig_1_subbot <- plot_grid(
+  stable_prkcda_plot,
+  NULL,
   HA100_plot,
-  NULL,
-  NULL,
   nrow = 1,
-  labels = c("I", "", "")
+  labels = c("H", "I", "J"),
+  rel_widths = c(0.9, 1, 0.9)
 )
 
 fig_1 <- plot_grid(

@@ -1,16 +1,36 @@
 #---------------------------
-cxcl8_heme_class_umap <- 
+# cxcl8_heme_class_umap <- 
+#   bb_var_umap(
+#   cds_cxcl8_marrow_heme,
+#   var = "label",
+#   cell_size = 2,
+#   palette = experimental_group_palette, 
+#   foreground_alpha = 0.6,
+#   shape = 16
+# ) +
+#   facet_wrap(facets = vars(value)) +
+#   theme(strip.background = element_blank())+
+#   theme(legend.position = "none")
+ 
+cxcl8_heme_class_umap <-
   bb_var_umap(
-  cds_cxcl8_marrow_heme,
-  var = "label",
-  cell_size = 2,
-  palette = experimental_group_palette, 
-  foreground_alpha = 0.6,
-  shape = 16
-) +
-  facet_wrap(facets = vars(value)) +
-  theme(strip.background = element_blank())+
-  theme(legend.position = "none")
+    cds_cxcl8_marrow_heme,
+    var = "density",
+    cell_size = 1,
+    facet_by = "label"
+  ) +
+  theme(strip.background = element_blank()) +
+  theme(legend.position = "top") +
+  theme(legend.justification = "center") +
+  labs(color = "Cell Density")+
+  guides(
+    color = guide_colorbar(
+      title.position = "left",
+      barheight = 0.5,
+      title.hjust = 0.5,
+      title.theme = element_text(size = 9)
+    )
+  )
 
 cxcl8_partition_umap <-
   bb_var_umap(
@@ -24,19 +44,53 @@ cxcl8_partition_umap <-
   )
 
 
-cxcl8_marrow_genebubbles <- bb_genebubbles(cds_cxcl8_marrow_final, 
-               cell_grouping = "partition_assignment_1", 
-               gene_ordering = "as_supplied",
-               genes = c("gata2b", "gata2a", "tal1", "spi1b", "mpx", "lyz", "ccr9a", "cd81a", "cxcl12a", "slc22a2", "slc12a3", "tekt2"), 
-               return_value = "data") |>  
-  ggplot(mapping = aes(x = gene_short_name, y = partition_assignment_1, size = proportion, color = expression)) +
+cxcl8_marrow_genebubbles <- bb_genebubbles(
+  cds_cxcl8_marrow_final,
+  cell_grouping = "partition_assignment_1",
+  gene_ordering = "as_supplied",
+  genes = c(
+    "gata2b",
+    "gata2a",
+    "tal1",
+    "spi1b",
+    "mpx",
+    "lyz",
+    "ccr9a",
+    "cd81a",
+    "cxcl12a",
+    "dcn",
+    "fn1a",
+    "col1a1a",
+    "slc22a2",
+    "slc12a3",
+    "tekt2"
+  ),
+  return_value = "data"
+) |>
+  ggplot(
+    mapping = aes(
+      x = gene_short_name,
+      y = partition_assignment_1,
+      size = proportion,
+      color = expression
+    )
+  ) +
   geom_point() +
   scale_size_area(max_size = 6) +
   scale_color_viridis_c() +
-  labs(x = NULL, y = NULL, color = "Expression", size = "Fraction\nExpressing") + 
-  guides(color = guide_colorbar(title.theme = element_text(size = 9)), 
-         size = guide_legend(title.theme = element_text(size = 9))) +
-  theme(axis.text.x = element_text(face = "italic", angle = 30, hjust = 1))
+  labs(x = NULL,
+       y = NULL,
+       color = "Expression",
+       size = "Fraction\nExpressing") +
+  guides(
+    color = guide_colorbar(title.theme = element_text(size = 9)),
+    size = guide_legend(title.theme = element_text(size = 9))
+  ) +
+  theme(axis.text.x = element_text(
+    face = "italic",
+    angle = 30,
+    hjust = 1
+  ))
 
 
 # 
@@ -219,4 +273,20 @@ cxcl8_marrow_cluster_representation_barplot <-
   theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
   guides(fill = guide_legend(ncol = 1)) +
   geom_text(mapping = aes(y = texty, label = p.signif), nudge_y = 0.3, size = 3, show.legend = F)
+
+
+# precursor + myeloid : lymphoid calculations ---------------------------
+
+bb_cellmeta(cds_cxcl8_marrow_final) |> 
+  count(class, partition_assignment_1) |> 
+  filter(partition_assignment_1 %in% c("Progenitor/Myeloid", "Lymphoid")) |> 
+  pivot_wider(names_from = "partition_assignment_1", values_from = "n") |> 
+  mutate(ratio = `Progenitor/Myeloid`/Lymphoid) |> 
+  mutate(l2r = log2(ratio))
+
+
+
+
+
+
 

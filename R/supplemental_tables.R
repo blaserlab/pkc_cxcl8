@@ -48,6 +48,7 @@ supplemental_table_3 <- bind_rows(
 ) %>%
   relocate(gene_set) %>%
   relocate(related_figure) %>%
+  arrange(related_figure, gene_set) |> 
   write_csv(str_glue("{tables_out}/supplemental_table_3.csv"))
 
 
@@ -75,31 +76,10 @@ supplemental_table_4 <- bind_rows(
     marker_test_res_c_pmm_anno %>%
       as_tibble() %>%
       mutate(related_figure = "Figure 3") %>%
-      mutate(cell_group = paste0("Cluster ", cell_group)) %>%
-      mutate(
-        cell_group = recode(
-          cell_group,
-          "Cluster 1" = "Neutrophil 1",
-          "Cluster 2" = "Progenitor 1",
-          "Cluster 3" = "Neutrophil 2",
-          "Cluster 4" = "Distal Tubule 3",
-          "Cluster 5" = "Erythroid",
-          "Cluster 6" = "Progenitor 2",
-          "Cluster 7" = "Distal Tubule 2",
-          "Cluster 8" = "Proximal Tubule 2",
-          "Cluster 9" = "Pro-neutrophil",
-          "Cluster 10" = "Ectoderm",
-          "Cluster 11" = "Ciliated",
-          "Cluster 12" = "Stromal/Endothelial",
-          "Cluster 13" = "NC-derived",
-          "Cluster 14" = "Proliferative",
-          "Cluster 15" = "Proximal Tubule 1",
-          "Cluster 16" = "Distal Tubule 1"
-        )
-      ) %>%
+      mutate(cell_group = revision_cluster_assignment) |> 
       relocate(cell_group) %>%
       relocate(related_figure) %>%
-      select(-cluster_assignment),
+      select(-revision_cluster_assignment),
     cxcl8_marrow_partition_assignment_top_markers %>%
       as_tibble() %>%
       rename(cell_group = partition_assignment) %>%

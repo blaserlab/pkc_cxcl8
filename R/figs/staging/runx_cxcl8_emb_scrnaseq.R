@@ -151,7 +151,8 @@ niche_pop_gene_dotplot <-
   labs(x = NULL, y = NULL, color = "Expression", size = "Fraction\nExpressing") + 
   guides(color = guide_colorbar(title.theme = element_text(size = 9)), 
          size = guide_legend(title.theme = element_text(size = 9))) +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+  theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+  theme(axis.text.y = element_text(face = "italic"))
 
 # MSC subclusters---------------------------------------------------------------
 emb_msc_sublcuster_umap <-

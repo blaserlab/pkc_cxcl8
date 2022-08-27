@@ -1,7 +1,7 @@
 if (stage_with_compose) {
-  # source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
-  # source("R/figs/staging/runx_cxcl8_km_facs.R")
-  # source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
+  source("R/figs/staging/runx_cxcl8_emb_scrnaseq.R")
+  source("R/figs/staging/runx_cxcl8_km_facs.R")
+  source("R/figs/staging/runx_cxcl8_marrow_scrnaseq.R")
 }
 
 fig_6_left <-
@@ -71,12 +71,11 @@ fig_6 <-
     nrow = 4,
     rel_heights = c(1.1,1,0.9,1)
   )
-
-save_plot(fig_6,
-          filename = "test_fig6.png",
-          # filename = str_glue("{figs_out}/figure6.{device}"),
-          base_width = 7.5, 
-          base_height = 9.75 
-         )
-
+ggsave2(
+  plot = fig_6,
+  filename = str_glue("{figs_out}/figure6.{device}"),
+  width = 7.5,
+  height = 9.75,
+  device = cairo_pdf
+)
 

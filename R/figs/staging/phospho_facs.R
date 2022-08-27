@@ -54,13 +54,14 @@ pfacs_density_plot <- ggplot(pfacs_data |> mutate(celltype = recode(celltype, "f
   geom_segment(data = segment_data, mapping = aes(x = xstart, y = ystart, xend = xend, yend = ystart)) +
   geom_segment(data = segment_data, mapping = aes(x = xstart, xend = xstart, y = ystart-0.05, yend = ystart + 0.05)) +
   geom_richtext(data = segment_data, mapping = aes(x = textx, y = ystart), label = "p-ERK<sup>+</sup>", nudge_y = 0.3, fill = NA, label.color = NA, size = 3) +
-  facet_wrap(~celltype, ncol = 1, scales = "fixed") +
+  facet_wrap(~celltype, ncol = 1, scales = "fixed", strip.position = "right") +
   theme(strip.background = element_blank()) +
-  theme(strip.text = element_markdown()) +
+  theme(strip.text.y = element_markdown()) +
   labs(y = "Density", color = NULL) +
   theme(legend.position = "top") +
   theme(legend.direction = "horizontal") +
-  theme(legend.justification = "center")
+  theme(legend.justification = "center") +
+  theme(strip.background.y = ggh4x::element_part_rect("l", color = "black"))
 pfacs_density_plot
 # get the summary data
 pfacs_data |> 

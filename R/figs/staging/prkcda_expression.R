@@ -34,8 +34,9 @@ pmm_pkc_dotplot <- bb_genebubbles(obj = filter_cds(cds_pmm_final,
   guides(color = guide_colorbar(title.theme = element_text(size = 9)),
          size = guide_legend(title.theme = element_text(size = 9))) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))  +
+  theme(axis.text.y = element_text(face = "italic"))  +
   theme(legend.key.height = unit(3.5, "mm")) +
-  labs(x = NULL, y = NULL) 
+  labs(x = NULL, y = NULL, color = "Expression", size = "Fraction\nExpressing") 
 
 
 
@@ -135,7 +136,7 @@ p1 <-
   theme(axis.text.y.left = element_text(size = 6))
 
 p2 <- bb_plot_trace_model(scatac_trace) + 
-  theme_shrinky(size = 8) 
+  theme_shrinky(size = 8)
 
 p3 <- bb_plot_trace_feature(scatac_trace, type_to_plot = "Peaks") +
   theme_shrinky(size = 8)
@@ -405,7 +406,7 @@ tfbs_consensus_plot <-
   scale_color_manual(values = c("yes" = "red4", "no" = "grey80")) +
   scale_fill_manual(values = alpha(c("yes" = "red4", "no" = "transparent"), alpha = 0.4)) +
   theme(legend.position = "none") +
-  labs(x = "-log<sub>10</sub> q E4-HUVEC", y = "-log<sub>10</sub> q zebrafish") +
+  labs(x = "-log<sub>10</sub> q E4-HUVEC", y = "-log<sub>10</sub> q zf") +
   theme(axis.title.x = element_markdown()) +
   theme(axis.title.y = element_markdown())
 tfbs_consensus_plot  
@@ -447,9 +448,9 @@ e4_atac_tss_enrichment_plot <- ggplot(e4_atac_tss_metafeature_data %>%
                                                     color = label)) +
   geom_line() +
   scale_color_brewer(palette = "Set1") +
-  labs(x = "Distance to TSS", y = "Mean Normalized Counts", color = "Biological\nReplicate") +
+  labs(x = "Distance to TSS", y = "Mean\nNormalized Counts", color = "Biological\nReplicate") +
   geom_vline(xintercept = 0,color = "grey80", linetype = "dashed") +
-  theme(legend.position = c(0.75, 0.75))
+  theme(legend.position = c(0.6, 0.75))
 
 # revision:  table of cell assignments--------------------------------------
 scatac_cluster_assignment_barplot <- bb_cellmeta(zf_cds) |>
@@ -463,6 +464,10 @@ scatac_cluster_assignment_barplot <- bb_cellmeta(zf_cds) |>
                                                         "Neutrophil", 
                                                         "Erythroid", 
                                                         "Renal"))) |>
+  mutate(seurat_predicted_id = recode(seurat_predicted_id, 
+                                      "Stromal/Endothelial" = "Stromal/EC",
+                                      "Progenitor 2" = "Lymphoid",
+                                      "Progenitor 1" = "Myeloid")) |> 
   mutate(seurat_predicted_id = factor(seurat_predicted_id)) |> 
   ggplot(mapping = aes(x = revision_leiden_assignment, 
                        y = n, 
@@ -470,6 +475,6 @@ scatac_cluster_assignment_barplot <- bb_cellmeta(zf_cds) |>
   geom_col(position = "fill", color = "black") +
   scale_fill_manual(values = revision_palette_1) +
   labs(x = "Cluster Assignment", 
-       y = "Proportion of Cluster", 
-       fill = "Predicted Label")
-scatac_cluster_assignment_barplot
+       y = "Proportion\nof Cluster", 
+       fill = "Predicted Label from scRNA-seq Data") +
+  guides(fill=guide_legend(ncol=2))
