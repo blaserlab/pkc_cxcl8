@@ -321,7 +321,7 @@ R_version	name	version	date_time	hash	binary_location	status
 4.2.0	formatR	1.12	2022-09-06T19:24:59Z	40cf1cf770f3cb112a9ac1ab2a4dc2c0	/workspace/rst/cache_R_4_2/library/formatR/1.12/40cf1cf770f3cb112a9ac1ab2a4dc2c0/formatR	available
 4.2.0	fortunes	1.5.4	2022-09-06T22:17:35Z	b00699d59fda5f86bbf73ed9396ae0f8	/workspace/rst/cache_R_4_2/library/fortunes/1.5-4/b00699d59fda5f86bbf73ed9396ae0f8/fortunes	available
 4.2.0	fpc	2.2.9	2022-09-06T22:48:58Z	044896597ddfe099bc56fa6134120ac3	/workspace/rst/cache_R_4_2/library/fpc/2.2-9/044896597ddfe099bc56fa6134120ac3/fpc	available
-4.2.0	fs	1.5.2	2022-09-07T18:49:26Z	0a7ff306020b511b9de41cc193af40a0	/workspace/rst/cache_R_4_2/library/fs/1.5.2/0a7ff306020b511b9de41cc193af40a0/fs	available
+4.2.0	fs	1.5.2	2022-09-07T18:49:26Z	0a7ff306020b511b9de41cc193af40a0	/workspace/rst/cache_R_4_2/library/fs/1.5.2/0a7ff306020b511b9de41cc193af40a0/fs	active
 4.2.0	furrr	0.3.1	2022-09-06T22:09:21Z	4d07a41c5a437689f05be90539608393	/workspace/rst/cache_R_4_2/library/furrr/0.3.1/4d07a41c5a437689f05be90539608393/furrr	available
 4.2.0	futile.logger	1.4.3	2022-09-06T19:24:59Z	0396083ac13051695ac57ae77170254a	/workspace/rst/cache_R_4_2/library/futile.logger/1.4.3/0396083ac13051695ac57ae77170254a/futile.logger	available
 4.2.0	futile.options	1.0.1	2022-09-06T19:24:59Z	6c5e5092a1453c7b7b17ddf9cb165703	/workspace/rst/cache_R_4_2/library/futile.options/1.0.1/6c5e5092a1453c7b7b17ddf9cb165703/futile.options	available

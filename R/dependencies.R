@@ -14,7 +14,6 @@ suppressPackageStartupMessages(library("RColorBrewer"))
 suppressPackageStartupMessages(library("ggrepel"))
 suppressPackageStartupMessages(library("ggpubr"))
 suppressPackageStartupMessages(library("rstatix"))
-suppressPackageStartupMessages(library("CytoExploreR"))
 suppressPackageStartupMessages(library("Signac"))
 suppressPackageStartupMessages(library("patchwork"))
 suppressPackageStartupMessages(library("SeuratWrappers"))
@@ -29,6 +28,4 @@ suppressPackageStartupMessages(library("pander"))
 suppressPackageStartupMessages(library("Cairo"))
 
 
-blaseRtemplates::bb_renv_datapkg("/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/projects/pkc_cxcl8_data/datapkg")
-
-lazyData::requireData("pkc.cxcl8.datapkg")
+blaseRtemplates::project_data("/home/OSUMC.EDU/blas02/network/X/Labs/Blaser/Brad/projects/pkc_cxcl8_data/datapkg")
