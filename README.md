@@ -37,5 +37,5 @@ Altered hematopoietic stem cell (HSC) fate underlies primary blood disorders but
   - find the variable name for the panel you wish to review in the appropriate figure composition file in R/figs/composition.
   - search for that variable name in R/figs/staging
   - find the original data object used to generate that panel in the code
-  - type ?<data object name> to get the help manual
-  - to review processing code, go to the installed location of pkc.cxcl8.datapkg on your system, enter the data-raw directory and run grep --include=\*.R -rnw '.' -e "<data object name>"
+  - type ?data_object_name to get the help manual
+  - to review processing code, go to the installed location of pkc.cxcl8.datapkg on your system, enter the data-raw directory and run grep --include=\*.R -rnw '.' -e "data_object_name"
