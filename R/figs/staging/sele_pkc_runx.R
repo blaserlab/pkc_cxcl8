@@ -12,10 +12,11 @@ HA100_plot <-
     )
   ) +
   geom_hline(yintercept = 1, color = "grey80", linetype = "dashed") +
+  geom_violin() + 
   geom_jitter(
     shape = jitter_shape,
     width = jitter_width,
-    size = jitter_size,
+    size = 0.5,
     stroke = jitter_stroke,
     height = jitter_height
   ) +
@@ -39,7 +40,6 @@ HA100_plot <-
   theme(legend.position = "none") + 
   labs(y = "Fold Change in HSPCs", x = NULL) 
 
-
 # fig 1G prkcda runx stables####----------------------------------------------------------------------------------------------------------------------------------------------------
 stable_prkcda_plot <-
   ggplot(
@@ -47,17 +47,18 @@ stable_prkcda_plot <-
       mutate(label_new = recode(label, "-" = "-", "+" = "TG")) %>%
       mutate(label_new = factor(label_new, levels = c("-", "TG"))),
     mapping = aes(
-      x = label_new,
+      x = label,
       y = runx_fold_change,
-      fill = label_new,
-      color = label_new
+      fill = label,
+      color = label
     )
   ) +
   geom_hline(yintercept = 1, color = "grey80", linetype = "dashed") +
+  geom_violin() + 
   geom_jitter(
     shape = jitter_shape,
     width = jitter_width,
-    size = jitter_size,
+    size = 0.5, 
     stroke = jitter_stroke,
     height = jitter_height
   ) +
@@ -96,12 +97,13 @@ all_pkc_runx <-
   geom_hline(yintercept = 1,
              color = "grey80",
              linetype = "dashed") +
+  geom_violin() + 
   geom_jitter(
     shape = jitter_shape,
     width = jitter_width,
     height = jitter_height,
-    size = jitter_size,
-    stroke = jitter_stroke
+    size = 0.5,
+    stroke = jitter_stroke,
   ) +
   scale_fill_manual(values = alpha(c(experimental_group_palette),jitter_alpha_fill)) +
   scale_color_manual(values = experimental_group_palette) +
@@ -123,6 +125,6 @@ all_pkc_runx <-
   scale_y_continuous(expand = expansion(mult = c(0.1, 0.1))) +
   theme(legend.position = "none") +
   theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
-  labs(y = "Fold Change in HSPCs", x = "PKC Isoform Overexpression") +
+  labs(y = "Fold Change in HSPCs", x = NULL) +
   theme(strip.background = element_blank(), 
         strip.text = element_blank()) 

@@ -59,7 +59,8 @@ volcanoplot <-
     segment.square = TRUE,
     segment.inflect = TRUE,
     min.segment.length = 0
-  ) 
+  )
+  
 # bar plot with pkc family####---------------------------------------------------------------
 pkc_family_plot <-
   ggplot(pkc_data_to_plot, aes(x = gene, y = value, fill = alt_name1)) +

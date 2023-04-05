@@ -8,12 +8,12 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
 options(dplyr.summarise.inform = FALSE)
-source("R/dependencies.R")
-source("R/configs.R")
+source(here::here("R/dependencies.R"))
+source(here::here("R/configs.R"))
 ```
 
 
-## Figure 1E
+## Figure 1I
 
 ```{r}
 prkc_transients_all %>%
@@ -31,7 +31,7 @@ rstatix::t_test(prkc_transients_all %>%
   pander(caption = "Welch's T Test")
 ```
 
-## Figure 1G
+## Figure 1M
 
 ```{r}
 stable_prkcda_runx_df %>%
@@ -51,7 +51,7 @@ rstatix::wilcox_test(
   pander(caption = "Wilcoxon Rank Sum Test")
 ```
 
-## Figure 1H
+## Figure 1O
 
 ```{r}
 HA100_data %>%
@@ -116,8 +116,15 @@ gestalt_cor_data %>%
 ## Figure 3D
 
 ```{r}
-cluster_proportions_pmm %>%
-  pander()
+suppressMessages(bb_cluster_representation(cds =  cds_pmm_final, 
+                          cluster_var = "cluster", 
+                          class_var = "label_new", 
+                          experimental_class = "prkcda", 
+                          control_class = "control", 
+                          return_value = "table") |> 
+  left_join(bb_cellmeta(cds_pmm_final) |> group_by(cluster, revision_cluster_assignment) |> summarise()) |> 
+  filter(revision_cluster_assignment %in% c("Myeloid", "Lymphoid", "Erythroid", "Pro-neutrophil", "Neutrophil 1", "Neutrophil 2", "Proliferative", "HSC/Thr"))) |>   
+pander(caption = "Differential Representation")
 ```
 
 ## Figure 5B
@@ -186,7 +193,7 @@ wilcox.test(x = tpa, y = tpa_meki) %>%
   pander()
 ```
 
-## Figure 5E
+## Figure 5F
 
 ```{r}
 runx_cxcl8_restime %>%
@@ -199,33 +206,33 @@ runx_cxcl8_restime %>%
   pander(caption = "Wilcoxon Rank Sum Test")
 ```
 
-## Figure 5F
-
-```{r}
-runx_cxcl8_prkcda_mut %>%
-  group_by(label) %>%
-  summarise(med_res_time = median(time_h)) %>%
-  pander(caption = "Descriptive Statistics")
-
-runx_cxcl8_prkcda_mut %>%
-  rstatix::wilcox_test(formula = time_h ~ label) %>%
-  pander(caption = "Wilcoxon Rank Sum Test")
-```
-
 ## Figure 5G
 
 ```{r}
-elrcxc %>%
+runx_cxcl8_prkcda_mut %>%
   group_by(label) %>%
   summarise(med_res_time = median(time_h)) %>%
   pander(caption = "Descriptive Statistics")
 
-elrcxc %>%
+runx_cxcl8_prkcda_mut %>%
   rstatix::wilcox_test(formula = time_h ~ label) %>%
   pander(caption = "Wilcoxon Rank Sum Test")
 ```
 
 ## Figure 5H
+
+```{r}
+elrcxc %>%
+  group_by(label) %>%
+  summarise(med_res_time = median(time_h)) %>%
+  pander(caption = "Descriptive Statistics")
+
+elrcxc %>%
+  rstatix::wilcox_test(formula = time_h ~ label) %>%
+  pander(caption = "Wilcoxon Rank Sum Test")
+```
+
+## Figure 5I
 
 ```{r}
 runx_cxcl8_competition %>%
@@ -238,7 +245,7 @@ runx_cxcl8_competition %>%
   pander(caption = "Wilcoxon Rank Sum Test")
 ```
 
-## Figure 5I
+## Figure 5J
 
 ```{r}
 runx_cxcl8_cuddletime %>%
@@ -251,7 +258,7 @@ runx_cxcl8_cuddletime %>%
   pander(caption = "Wilcoxon Rank Sum Test")
 ```
 
-## Figure 5J
+## Figure 5K
 
 ```{r}
 runx_cxcl8_stables %>%
@@ -268,7 +275,7 @@ runx_cxcl8_stables %>%
   pander(caption = "Welch's T Test")
 ```
 
-## Figure 5K
+## Figure 5L
 
 ```{r}
 drug_data %>%
@@ -286,7 +293,7 @@ drug_data %>%
   pander(caption = "Welch's T Test")
 ```
 
-## Figure 5L
+## Figure 5M
 
 ```{r}
 qpcr_res_final %>%
@@ -303,7 +310,7 @@ qpcr_res_final %>%
 
 ```{r}
 cluster_proportions_emb %>%
-  pander()
+  pander(caption = "Differential Representation")
 ```
 
 
@@ -338,5 +345,5 @@ ks.test(control_pseudotime, cxcl8_pseudotime) %>% pander()
 ## Figure 6K
 
 ```{r}
-cluster_proportions_cxcl8_marrow %>% pander()
+cluster_proportions_cxcl8_marrow %>% pander(caption = "Differential Representation")
 ```
