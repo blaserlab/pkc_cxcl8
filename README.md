@@ -21,8 +21,11 @@ Altered hematopoietic stem cell (HSC) fate underlies primary blood disorders but
     -  install.packages('blaseRtools', repos = c('https://blaserlab.r-universe.dev', 'https://cloud.r-project.org'))
     -  install.packages('blaseRtemplates', repos = c('https://blaserlab.r-universe.dev', 'https://cloud.r-project.org'))
     -  install.packages('blaseRdata', repos = c('https://blaserlab.r-universe.dev', 'https://cloud.r-project.org'))
-  - source R/dependencies.R (the final line in that file must be edited to point to the directory containing the data package)
-  - source R/configs.R (the file paths defining the figs_out  and tables_out variables should be customized for your system)
+  - edit R/dependencies.R
+    - unless you are using a blaseRtemplates installation, comment out the last active line starting blaseRtemplates::project_data....
+    - uncomment/activate the last 3 lines to load the data into your workspace
+  - edit R/configs.R 
+    - the file paths for output should be customized for your system
   - typical time required for the first installation and data loading is approximately 15 minutes. This excludes the time required to download the data package.
 
 3.  Instructions for use after installing and configuring
